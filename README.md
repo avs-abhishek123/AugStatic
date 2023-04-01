@@ -1,7 +1,7 @@
-# AugStatic - A Light-Weight Image Augmentation Library | [Paper Link](https://www.jetir.org/papers/JETIR2205199.pdf)
+<h1> AugStatic - A Light-Weight Image Augmentation Library </h1>
 
 ## Abstract
-
+<p> <a href = 'https://www.jetir.org/papers/JETIR2205199.pdf'> [ Paper Link ] </a> </p>
 The rapid exponential increase in the data led to an abrupt mix of various data types, leading to a deficiency of helpful information. Creating new data with the existing different types of data are presented in this paper. Augmentation is adding up or modifying the dataset with extra data. There are many types of augmentation done for various kinds of datasets. Augmentation has been widely used in multiple pre-processing steps of diverse machine learning pipelines. Many libraries or packages are made for augmentation called augmentation libraries. There are many salient features that each library supports. This paper seeks to enhance the library that makes the AugStatic library much more lightweight and efficient. AugStatic is a custom-built image augmentation library with lower computation costs and more extraordinary salient features compared to other image augmentation libraries. This framework can be used for NumPy array and tensors too.
 
 
