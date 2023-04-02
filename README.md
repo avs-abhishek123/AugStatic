@@ -1,4 +1,4 @@
-<img src = 'https://github.com/avs-abhishek123/AugStatic/blob/8809c0700d3a8900fbe3e92ebc47ca39f2304922/augstatic.png' width = 1000 height = 470 align = "center">
+<img src = 'https://github.com/avs-abhishek123/AugStatic/blob/8809c0700d3a8900fbe3e92ebc47ca39f2304922/augstatic.png' width = 1020 height = 450 align = "center">
 
 <!--<h1 align ="center" style="font-size: 1400px"> AugStatic - A Light-Weight Image Augmentation Library </h1>-->
 <h1 align ="center" style="color: purple; font-size: 80px;"><b><u>AugStatic - A Light-Weight Image Augmentation Library</u></b></h1>
@@ -65,6 +65,47 @@ The rapid exponential increase in the data led to an abrupt mix of various data 
     <li> Many helper functions for augmentation visualization, conversion, and more. </li>
     </ul>
   </p>
+  
+---
+
+## Results 
+
+| Augmentation Technique | Output Image |
+| --- | --- |
+| Blur | ![Blur](https://github.com/avs-abhishek123/AugStatic/blob/0f12cb0adf7b0c9bd68074f8891907067604e79f/OutputImages/Blur.jpg) |
+| CLAHE(Contrast Stretched Adaptive Histogram Equalization) | ![CLAHE](https://github.com/avs-abhishek123/AugStatic/blob/0f12cb0adf7b0c9bd68074f8891907067604e79f/OutputImages/CLAHE.jpg) |
+| ChannelDropout | ![ChannelDropout](https://github.com/avs-abhishek123/AugStatic/blob/0f12cb0adf7b0c9bd68074f8891907067604e79f/OutputImages/ChannelDropout.jpg) |
+| ChannelShuffle | ![ChannelShuffle](https://github.com/avs-abhishek123/AugStatic/blob/0f12cb0adf7b0c9bd68074f8891907067604e79f/OutputImages/ChannelShuffle.jpg) |
+| ColorJitter | ![ColorJitter](https://github.com/avs-abhishek123/AugStatic/blob/0f12cb0adf7b0c9bd68074f8891907067604e79f/OutputImages/ColorJitter.jpg) |
+| Downscale | ![Downscale](https://github.com/avs-abhishek123/AugStatic/blob/0f12cb0adf7b0c9bd68074f8891907067604e79f/OutputImages/Downscale.jpg) |
+| Emboss | ![Emboss](https://github.com/avs-abhishek123/AugStatic/blob/0f12cb0adf7b0c9bd68074f8891907067604e79f/OutputImages/Emboss.jpg) |
+| FancyPCA | ![FancyPCA](https://github.com/avs-abhishek123/AugStatic/blob/0f12cb0adf7b0c9bd68074f8891907067604e79f/OutputImages/FancyPCA.jpg) |
+| GaussNoise | ![GaussNoise](https://github.com/avs-abhishek123/AugStatic/blob/0f12cb0adf7b0c9bd68074f8891907067604e79f/OutputImages/GaussNoise.jpg) |
+| GaussianBlur | ![GaussianBlur](https://github.com/avs-abhishek123/AugStatic/blob/0f12cb0adf7b0c9bd68074f8891907067604e79f/OutputImages/GaussianBlur.jpg) |
+| GlassBlur | ![GlassBlur](https://github.com/avs-abhishek123/AugStatic/blob/0f12cb0adf7b0c9bd68074f8891907067604e79f/OutputImages/GlassBlur.jpg) |
+| HueSaturationValue | ![HueSaturationValue](https://github.com/avs-abhishek123/AugStatic/blob/0f12cb0adf7b0c9bd68074f8891907067604e79f/OutputImages/HueSaturationValue.jpg) |
+| ISONoise | ![ISONoise](https://github.com/avs-abhishek123/AugStatic/blob/0f12cb0adf7b0c9bd68074f8891907067604e79f/OutputImages/ISONoise.jpg) |
+| InvertImg | ![InvertImg](https://github.com/avs-abhishek123/AugStatic/blob/0f12cb0adf7b0c9bd68074f8891907067604e79f/OutputImages/InvertImg.jpg) |
+| MedianBlur | ![MedianBlur](https://github.com/avs-abhishek123/AugStatic/blob/0f12cb0adf7b0c9bd68074f8891907067604e79f/OutputImages/MedianBlur.jpg) |
+| MotionBlur | ![MotionBlur](https://github.com/avs-abhishek123/AugStatic/blob/0f12cb0adf7b0c9bd68074f8891907067604e79f/OutputImages/MotionBlur.jpg) |
+| MultiplicativeNoise | ![MultiplicativeNoise](https://github.com/avs-abhishek123/AugStatic/blob/0f12cb0adf7b0c9bd68074f8891907067604e79f/OutputImages/MultiplicativeNoise.jpg) |
+| Posterize | ![Posterize](https://github.com/avs-abhishek123/AugStatic/blob/0f12cb0adf7b0c9bd68074f8891907067604e79f/OutputImages/Posterize.jpg) |
+| RGBShift | ![RGBShift](https://github.com/avs-abhishek123/AugStatic/blob/0f12cb0adf7b0c9bd68074f8891907067604e79f/OutputImages/RGBShift.jpg) |
+| Sharpen | ![Sharpen](https://github.com/avs-abhishek123/AugStatic/blob/0f12cb0adf7b0c9bd68074f8891907067604e79f/OutputImages/Sharpen.jpg) |
+| Solarize | ![Solarize](https://github.com/avs-abhishek123/AugStatic/blob/0f12cb0adf7b0c9bd68074f8891907067604e79f/OutputImages/Solarize.jpg) |
+| Superpixels | ![Superpixels](https://github.com/avs-abhishek123/AugStatic/blob/0f12cb0adf7b0c9bd68074f8891907067604e79f/OutputImages/Superpixels.jpg) |
+| ToGray | ![ToGray](https://github.com/avs-abhishek123/AugStatic/blob/0f12cb0adf7b0c9bd68074f8891907067604e79f/OutputImages/ToGray.jpg) |
+| ToSepia | ![ToSepia](https://github.com/avs-abhishek123/AugStatic/blob/0f12cb0adf7b0c9bd68074f8891907067604e79f/OutputImages/ToSepia.jpg) |
+| VerticalFlip | ![VerticalFlip](https://github.com/avs-abhishek123/AugStatic/blob/0f12cb0adf7b0c9bd68074f8891907067604e79f/OutputImages/VerticalFlip.jpg) |
+| HorizontalFlip | ![HorizontalFlip](https://github.com/avs-abhishek123/AugStatic/blob/0f12cb0adf7b0c9bd68074f8891907067604e79f/OutputImages/HorizontalFlip.jpg) |
+| Transpose | ![Transpose](https://github.com/avs-abhishek123/AugStatic/blob/0f12cb0adf7b0c9bd68074f8891907067604e79f/OutputImages/Transpose.jpg) |
+| OpticalDistortion | ![OpticalDistortion](https://github.com/avs-abhishek123/AugStatic/blob/0f12cb0adf7b0c9bd68074f8891907067604e79f/OutputImages/OpticalDistortion.jpg) |
+| GridDistortion | ![GridDistortion](https://github.com/avs-abhishek123/AugStatic/blob/0f12cb0adf7b0c9bd68074f8891907067604e79f/OutputImages/GridDistortion.jpg) |
+| JpegCompression | ![JpegCompression](https://github.com/avs-abhishek123/AugStatic/blob/0f12cb0adf7b0c9bd68074f8891907067604e79f/OutputImages/JpegCompression.jpg) |
+| Cutout | ![Cutout](https://github.com/avs-abhishek123/AugStatic/blob/0f12cb0adf7b0c9bd68074f8891907067604e79f/OutputImages/Cutout.jpg) |
+| CoarseDropout | ![CoarseDropout](https://github.com/avs-abhishek123/AugStatic/blob/0f12cb0adf7b0c9bd68074f8891907067604e79f/OutputImages/CoarseDropout.jpg) |
+| GridDropout | ![GridDropout](https://github.com/avs-abhishek123/AugStatic/blob/0f12cb0adf7b0c9bd68074f8891907067604e79f/OutputImages/GridDropout.jpg) |
+
 ---
 
 ## To cite my paper: 
