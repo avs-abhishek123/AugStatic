@@ -3,9 +3,9 @@
 <!--<h1 align ="center" style="font-size: 1400px"> AugStatic - A Light-Weight Image Augmentation Library </h1>-->
 <h1 align ="center" style="color: purple; font-size: 80px;"><b><u>AugStatic - A Light-Weight Image Augmentation Library</u></b></h1>
 
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/augstatic-a-light-weight-image-augmentation/augstatic-image-augmentation-on-coco)](https://paperswithcode.com/sota/augstatic-image-augmentation-on-coco?p=augstatic-a-light-weight-image-augmentation)
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/augstatic-a-light-weight-image-augmentation/augstatic-image-augmentation-on-cifar10)](https://paperswithcode.com/sota/augstatic-image-augmentation-on-cifar10?p=augstatic-a-light-weight-image-augmentation)
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/augstatic-a-light-weight-image-augmentation/augstatic-image-augmentation-on-imagenet)](https://paperswithcode.com/sota/augstatic-image-augmentation-on-imagenet?p=augstatic-a-light-weight-image-augmentation)
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/augstatic-a-light-weight-image-augmentation/augstatic-image-augmentation-on-cifar10&color=072c79)](https://paperswithcode.com/sota/augstatic-image-augmentation-on-cifar10?p=augstatic-a-light-weight-image-augmentation)
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/augstatic-a-light-weight-image-augmentation/augstatic-image-augmentation-on-coco&color=ff3131)](https://paperswithcode.com/sota/augstatic-image-augmentation-on-coco?p=augstatic-a-light-weight-image-augmentation)
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/augstatic-a-light-weight-image-augmentation/augstatic-image-augmentation-on-imagenet&color=#FFED00)](https://paperswithcode.com/sota/augstatic-image-augmentation-on-imagenet?p=augstatic-a-light-weight-image-augmentation)
 
 ## Abstract
 <p> <a href = 'https://www.jetir.org/papers/JETIR2205199.pdf'> [ Paper Link ] </a> </p>
