@@ -7,18 +7,11 @@
 <p> <a href = 'https://www.jetir.org/papers/JETIR2205199.pdf'> [ Paper Link ] </a> </p>
 The rapid exponential increase in the data led to an abrupt mix of various data types, leading to a deficiency of helpful information. Creating new data with the existing different types of data are presented in this paper. Augmentation is adding up or modifying the dataset with extra data. There are many types of augmentation done for various kinds of datasets. Augmentation has been widely used in multiple pre-processing steps of diverse machine learning pipelines. Many libraries or packages are made for augmentation called augmentation libraries. There are many salient features that each library supports. This paper seeks to enhance the library that makes the AugStatic library much more lightweight and efficient. AugStatic is a custom-built image augmentation library with lower computation costs and more extraordinary salient features compared to other image augmentation libraries. This framework can be used for NumPy array and tensors too.
 
-
----
-
-## Brief Introduction:
-
-* In this research, An light weight Efficient Augmentation library has been developed, named AugStatic
-* AugStatic is a custom-built image augmentation library with lower computation costs and efficiency compared to other image augmentation libraries. 
-* This framework can be used for NumPy arrays and tensors too.
-
 ---
 
 ## Background Research Work
+
+![Aug_types](https://github.com/avs-abhishek123/AugStatic/blob/7f33a6d188b09489af5dc092dc5c77f96724bcd0/Aug_types.PNG)
 
 ### Various types of augmentations were researched and compiled into a compact, lightweight, and practical library.
 
@@ -68,7 +61,7 @@ The rapid exponential increase in the data led to an abrupt mix of various data 
   
 ---
 
-## Results 
+## Methods & Results 
 
 | Augmentation Technique | Input Image | Output Image |
 | --- | --- | --- |
@@ -105,6 +98,18 @@ The rapid exponential increase in the data led to an abrupt mix of various data 
 | **Cutout** | ![Input_image](https://github.com/avs-abhishek123/AugStatic/blob/c563cf249fd0f28453eb63d47634c3279b426031/input_image.jpg) | ![Cutout](https://github.com/avs-abhishek123/AugStatic/blob/0f12cb0adf7b0c9bd68074f8891907067604e79f/OutputImages/Cutout.jpg) |
 | **CoarseDropout** | ![Input_image](https://github.com/avs-abhishek123/AugStatic/blob/c563cf249fd0f28453eb63d47634c3279b426031/input_image.jpg) | ![CoarseDropout](https://github.com/avs-abhishek123/AugStatic/blob/0f12cb0adf7b0c9bd68074f8891907067604e79f/OutputImages/CoarseDropout.jpg) |
 | **GridDropout** | ![Input_image](https://github.com/avs-abhishek123/AugStatic/blob/c563cf249fd0f28453eb63d47634c3279b426031/input_image.jpg) | ![GridDropout](https://github.com/avs-abhishek123/AugStatic/blob/0f12cb0adf7b0c9bd68074f8891907067604e79f/OutputImages/GridDropout.jpg) |
+
+---
+
+## Conclusion:
+
+* This framework can be used for NumPy arrays and tensors too.
+* It supports all the augmentations of PyTorch, Keras, Imgaug, Albumentations and Augmentor.
+* In this research, An light weight Efficient Augmentation library has been developed, named AugStatic
+* AugStatic is a custom-built image augmentation library with lower computation costs and efficiency compared to other image augmentation libraries. 
+* It is built on python and is easily understandable and flexible enough to keep adding features. Hence, making it more scalable
+* With the advancement in augmentation, there is a lot of scope in making the AugStatic library for audio, NLP, and time-series data. 
+
 ---
 
 ## To cite my paper: 
