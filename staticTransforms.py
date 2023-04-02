@@ -1,15 +1,15 @@
-import pprint as pp
-import numpy as np
-import cv2
 import os
 import json
 import random
-import PIL
-from PIL import Image
-from PIL import Image as PILImage
-from PIL import ImageDraw as PILImageDraw
-from typing import Any, Callable,Dict, List, Optional, Sequence, Tuple, Union
+from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Union
+
+import pprint as pp
+import numpy as np
 import matplotlib.pyplot as plt
+
+import cv2
+import PIL
+from PIL import Image, ImageDraw
 
 import torch
 from torchvision import transforms
@@ -17,16 +17,19 @@ from torchvision import transforms
 import albumentations as A
 
 from functools import wraps
-# Functools module is for higher-order functions that work on other functions. 
+
+
+# Functools module is for higher-order functions that work on other functions.
 # It provides functions for working with other functions and callable objects to use or extend them without completely rewriting them.
+
 
 
 # ### Dependencies
 # 
 # #### All dependencies are in requirements.txt
 # 
-# ( Use this command to generate the requirement.txt 
-# **conda list -e > requirements.txt** )
+# (Use this command to generate the requirement.txt 
+# **conda list -e > requirements.txt**)
 # 
 # Install albumentations using the following commands
 # * pip install -U albumentations
@@ -35,55 +38,57 @@ from functools import wraps
 # Why albumentations?
 # https://docs.google.com/spreadsheets/d/1rmaGngJXj3X0_ugVLWVW7h4lvayWiIJO_o2dfRNQ380/edit?usp=sharing
 
+
 # ### Transform Functions 
-# *    Blur
-# *    CLAHE
-# *    ChannelDropout
-# *    ChannelShuffle
-# *    ColorJitter
-# *    Downscale
-# *    Emboss
-# *    FancyPCA
-# *    FromFloat (Not used while evaluating model accuracies)
-# *    GaussNoise
-# *    GaussianBlur
-# *    GlassBlur
-# *    HueSaturationValue
-# *    ISONoise
-# *    InvertImg
-# *    MedianBlur
-# *    MotionBlur
-# *    MultiplicativeNoise
-# *    Normalize (Not used while evaluating model accuracies)
-# *    Posterize
-# *    RGBShift
-# *    Sharpen
-# *    Solarize
-# *    Superpixels
-# *    ToFloat (Not used while evaluating model accuracies)
-# *    ToGray
-# *    ToSepia
-# *    VerticalFlip
-# *    HorizontalFlip
-# *    Flip (Not used while evaluating model accuracies)
-# *    Transpose
-# *    OpticalDistortion
-# *    GridDistortion
-# *    JpegCompression
-# *    Cutout
-# *    CoarseDropout
-# *    MaskDropout (Not used while evaluating model accuracies)
-# *    GridDropout
-# *    FDA (Non-Functional)
-# *    Equalize (Non-Functional)
-# *    HistogramMatching (Non-Functional)
-# *    ImageCompression (Non-Functional)
-# *    PixelDistributionAdaptation (Non-Functional)
-# *    PadIfNeeded (Non-Functional)
-# *    Lambda (Non-Functional)
-# *    TemplateTransform (Non-Functional)
-# *    RingingOvershoot (Non-Functional)
-# *    UnsharpMask (Non-Functional)
+# * Blur
+# * CLAHE
+# * ChannelDropout
+# * ChannelShuffle
+# * ColorJitter
+# * Downscale
+# * Emboss
+# * FancyPCA
+# * FromFloat (Not used while evaluating model accuracies)
+# * GaussNoise
+# * GaussianBlur
+# * GlassBlur
+# * HueSaturationValue
+# * ISONoise
+# * InvertImg
+# * MedianBlur
+# * MotionBlur
+# * MultiplicativeNoise
+# * Normalize (Not used while evaluating model accuracies)
+# * Posterize
+# * RGBShift
+# * Sharpen
+# * Solarize
+# * Superpixels
+# * ToFloat (Not used while evaluating model accuracies)
+# * ToGray
+# * ToSepia
+# * VerticalFlip
+# * HorizontalFlip
+# * Flip (Not used while evaluating model accuracies)
+# * Transpose
+# * OpticalDistortion
+# * GridDistortion
+# * JpegCompression
+# * Cutout
+# * CoarseDropout
+# * MaskDropout (Not used while evaluating model accuracies)
+# * GridDropout
+# * FDA (Non-Functional)
+# * Equalize (Non-Functional)
+# * HistogramMatching (Non-Functional)
+# * ImageCompression (Non-Functional)
+# * PixelDistributionAdaptation (Non-Functional)
+# * PadIfNeeded (Non-Functional)
+# * Lambda (Non-Functional)
+# * TemplateTransform (Non-Functional)
+# * RingingOvershoot (Non-Functional)
+# * UnsharpMask (Non-Functional)
+
  
 
 # #### Blur
