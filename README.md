@@ -107,9 +107,9 @@ The rapid exponential increase in the data led to an abrupt mix of various data 
 
 ## Conclusion:
 
+* In this research, An light weight Efficient Augmentation library has been developed, named AugStatic
 * This framework can be used for NumPy arrays and tensors too.
 * It supports all the augmentations of PyTorch, Keras, Imgaug, Albumentations and Augmentor.
-* In this research, An light weight Efficient Augmentation library has been developed, named AugStatic
 * AugStatic is a custom-built image augmentation library with lower computation costs and efficiency compared to other image augmentation libraries. 
 * It is built on python and is easily understandable and flexible enough to keep adding features. Hence, making it more scalable
 * With the advancement in augmentation, there is a lot of scope in making the AugStatic library for audio, NLP, and time-series data. 
