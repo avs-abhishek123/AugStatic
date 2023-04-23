@@ -1348,7 +1348,7 @@ def CoarseDropout (image,max_holes=8, max_height=8, max_width=8, min_holes=None,
     return transformed_image
 
 
-# #### Lambda
+# Lambda
 """
     A flexible transformation class for using user-defined transformation functions per targets.
     Function signature must include **kwargs to accept optional arguments like interpolation method, image size, etc:
@@ -1373,49 +1373,55 @@ def CoarseDropout (image,max_holes=8, max_height=8, max_width=8, min_holes=None,
     return transformed_image
 """
 
-
-# #### MaskDropout
+# MaskDropout
 def MaskDropout (image, max_objects=1, image_fill_value=0, mask_fill_value=0, always_apply=False, p=1.0):
     """
-    Image & mask augmentation that zero out mask and image regions corresponding
-    to randomly chosen object instance from mask.
-    Mask must be single-channel image, zero values treated as background.
-    Image can be any number of channels.
+    Apply image and mask augmentation that masks out regions of the image corresponding to a random object instance in the mask.
+    Mask must be a single-channel image where zero values indicate background.
+    Args:
+    image (numpy.ndarray): An image of any number of channels.
+    max_objects (int): The maximum number of object instances to mask out. Defaults to 1.
+    image_fill_value (int): The fill value to use for masked image regions. Defaults to 0.
+    mask_fill_value (int): The fill value to use for masked mask regions. Defaults to 0.
+    always_apply (bool): Whether to always apply the augmentation. Defaults to False.
+    p (float): The probability of applying the augmentation. Defaults to 1.0.
+
+    Returns:
+    numpy.ndarray: The transformed image.
+
     Inspired by https://www.kaggle.com/c/severstal-steel-defect-detection/discussion/114254
     """
-    transform = A.Compose([A.augmentations.transforms.MaskDropout (max_objects, image_fill_value, mask_fill_value, always_apply, p)])
+    transform = A.Compose([A.augmentations.transforms.MaskDropout(max_objects=max_objects, image_fill_value=image_fill_value, mask_fill_value=mask_fill_value, always_apply=always_apply, p=p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
 
-
-# #### GridDropout
+# GridDropout
 def GridDropout (image,ratio=0.5, unit_size_min=None, unit_size_max=None, holes_number_x=None, holes_number_y=None, shift_x=0, shift_y=0, random_offset=False, fill_value=0, mask_fill_value=None, always_apply=False, p=1.0):
-    """GridDropout, drops out rectangular regions of an image and the corresponding mask in a grid fashion.
+    """
+    Apply grid dropout to an image and corresponding mask in a grid fashion.
+    GridDropout, drops out rectangular regions of an image and the corresponding mask in a grid fashion.
     Args:
-        ratio (float): the ratio of the mask holes to the unit_size (same for horizontal and vertical directions).
-            Must be between 0 and 1. Default: 0.5.
-        unit_size_min (int): minimum size of the grid unit. Must be between 2 and the image shorter edge.
-            If 'None', holes_number_x and holes_number_y are used to setup the grid. Default: `None`.
-        unit_size_max (int): maximum size of the grid unit. Must be between 2 and the image shorter edge.
-            If 'None', holes_number_x and holes_number_y are used to setup the grid. Default: `None`.
-        holes_number_x (int): the number of grid units in x direction. Must be between 1 and image width//2.
-            If 'None', grid unit width is set as image_width//10. Default: `None`.
-        holes_number_y (int): the number of grid units in y direction. Must be between 1 and image height//2.
-            If `None`, grid unit height is set equal to the grid unit width or image height, whatever is smaller.
-        shift_x (int): offsets of the grid start in x direction from (0,0) coordinate.
-            Clipped between 0 and grid unit_width - hole_width. Default: 0.
-        shift_y (int): offsets of the grid start in y direction from (0,0) coordinate.
-            Clipped between 0 and grid unit height - hole_height. Default: 0.
-        random_offset (boolean): weather to offset the grid randomly between 0 and grid unit size - hole size
-            If 'True', entered shift_x, shift_y are ignored and set randomly. Default: `False`.
-        fill_value (int): value for the dropped pixels. Default = 0
-        mask_fill_value (int): value for the dropped pixels in mask.
-            If `None`, transformation is not applied to the mask. Default: `None`.
+        image (numpy.ndarray): An image of type uint8 or float32.
+        ratio (float): The ratio of the mask holes to the unit_size in both horizontal and vertical directions. Must be between 0 and 1. Defaults to 0.5.
+        unit_size_min (int): The minimum size of the grid unit. Must be between 2 and the shorter edge of the image. If None, `holes_number_x` and `holes_number_y` are used to set up the grid. Defaults to None.
+        unit_size_max (int): The maximum size of the grid unit. Must be between 2 and the shorter edge of the image. If None, `holes_number_x` and `holes_number_y` are used to set up the grid. Defaults to None.
+        holes_number_x (int): The number of grid units in the horizontal direction. Must be between 1 and image width//2. If None, grid unit width is set to `image_width//10`. Defaults to None.
+        holes_number_y (int): The number of grid units in the vertical direction. Must be between 1 and image height//2. If None, grid unit height is set equal to the grid unit width or image height, whichever is smaller. Defaults to None.
+        shift_x (int): The offset of the grid start in the horizontal direction from the (0, 0) coordinate. Clipped between 0 and grid unit_width - hole_width. Defaults to 0.
+        shift_y (int): The offset of the grid start in the vertical direction from the (0, 0) coordinate. Clipped between 0 and grid unit height - hole_height. Defaults to 0.
+        random_offset (bool): Whether to randomly offset the grid between 0 and grid unit size - hole size. If True, entered `shift_x` and `shift_y` are ignored and set randomly. Defaults to False.
+        fill_value (int): The value for the dropped pixels. Defaults to 0.
+        mask_fill_value (int): The value for the dropped pixels in the mask. If None, transformation is not applied to the mask. Defaults to None.
+        always_apply (bool): Whether to always apply the augmentation. Defaults to False.
+        p (float): The probability of applying the augmentation. Defaults to 1.0.
+
+    Returns:
+        numpy.ndarray: The transformed image.
+
     Targets:
         image, mask
-    Image types:
-        uint8, float32
+
     References:
         https://arxiv.org/abs/2001.04086
     """
@@ -1425,57 +1431,73 @@ def GridDropout (image,ratio=0.5, unit_size_min=None, unit_size_max=None, holes_
     return transformed_image
 
 
-# #### TemplateTransform
+# TemplateTransform
 """
-def TemplateTransform (image,templates=None, img_weight=0.5, template_weight=0.5, template_transform=None, name=None, always_apply=False, p=1.0):
-    Apply blending of input image with specified templates
+    Apply blending of input image with specified templates.
+
     Args:
-        templates (numpy array or list of numpy arrays): Images as template for transform.
-        img_weight ((float, float) or float): If single float will be used as weight for input image.
-            If tuple of float img_weight will be in range `[img_weight[0], img_weight[1])`. Default: 0.5.
-        template_weight ((float, float) or float): If single float will be used as weight for template.
-            If tuple of float template_weight will be in range `[template_weight[0], template_weight[1])`.
+        image (numpy.ndarray): Input image.
+        templates (list[numpy.ndarray] or numpy.ndarray): Images as templates for the transform.
+        img_weight (float or tuple[float, float]): If single float, it will be used as weight for the
+            input image. If tuple of floats, `img_weight` will be in the range `[img_weight[0], img_weight[1])`.
             Default: 0.5.
-        template_transform: transformation object which could be applied to template,
-            must produce template the same size as input image.
-        name (string): (Optional) Name of transform, used only for deserialization.
-        p (float): probability of applying the transform. Default: 1.0.
+        template_weight (float or tuple[float, float]): If single float, it will be used as weight for the
+            template. If tuple of floats, `template_weight` will be in the range `[template_weight[0],
+            template_weight[1])`. Default: 0.5.
+        template_transform (callable): Transformation function which could be applied to template, must
+            produce template the same size as input image.
+        name (str): (Optional) Name of transform, used only for deserialization.
+        always_apply (bool): Whether to always apply the transform. Default: False.
+        p (float): Probability of applying the transform. Default: 1.0.
+
     Targets:
         image
+
     Image types:
         uint8, float32
 
-    transform = A.Compose([A.augmentations.transforms.TemplateTransform (templates, img_weight, template_weight, template_transform, name, always_apply, p)])
+    Returns:
+        numpy.ndarray: Transformed image.
+
+    transform = A.Compose([A.augmentations.transforms.TemplateTransform(templates, img_weight,
+                                    template_weight, template_transform, name, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
 """
 
 
-# #### RingingOvershoot
+# RingingOvershoot
 """
 def RingingOvershoot (image,blur_limit=(7, 15), cutoff=(0.7853981633974483, 1.5707963267948966), always_apply=False, p=1.0):
-    Create ringing or overshoot artefacts by conlvolving image with 2D sinc filter.
+    Create ringing or overshoot artefacts by convolving image with 2D sinc filter.
+
     Args:
-        blur_limit (int, (int, int)): maximum kernel size for sinc filter.
-            Should be in range [3, inf). Default: (7, 15).
-        cutoff (float, (float, float)): range to choose the cutoff frequency in radians.
-            Should be in range (0, np.pi)
-            Default: (np.pi / 4, np.pi / 2).
-        p (float): probability of applying the transform. Default: 1.0
+        image (numpy.ndarray): Input image.
+        blur_limit (int, (int, int)): Maximum kernel size for sinc filter. Should be in range [3, inf). Default: (7, 15).
+        cutoff (float, (float, float)): Range to choose the cutoff frequency in radians.
+            Should be in range (0, np.pi). Default: (np.pi / 4, np.pi / 2).
+        always_apply (bool): Whether to always apply the transform. Default: False.
+        p (float): Probability of applying the transform. Default: 1.0.
+
     Reference:
-        dsp.stackexchange.com/questions/58301/2-d-circularly-symmetric-low-pass-filter
+        https://dsp.stackexchange.com/questions/58301/2-d-circularly-symmetric-low-pass-filter
         https://arxiv.org/abs/2107.10833
+
     Targets:
         image
-    transform = A.Compose([A.augmentations.transforms.RingingOvershoot (blur_limit, cutoff, always_apply, p)])
+
+    Returns:
+        numpy.ndarray: Transformed image.
+
+    transform = A.Compose([A.augmentations.transforms.RingingOvershoot(blur_limit, cutoff, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
 """
 
 
-# #### UnsharpMask
+# UnsharpMask
 """
 def UnsharpMask (image,blur_limit=(3, 7), sigma_limit=0.0, alpha=(0.2, 1.0), threshold=10, always_apply=False, p=1.0):
     Sharpen the input image using Unsharp Masking processing and overlays the result with the original image.
@@ -1519,11 +1541,18 @@ def visualize(image):
 
 # ### Custom Data Generator
 class StaticTransformDataGenerator(Sequence):
-    """Generates data for Keras
-    Sequence based data generator. Suitable for building data generator for training and prediction.
+    """
+    Generates data for Keras
+    Sequence based data generator.
+    Suitable for building data generator for training and prediction.
     """
     def __init__(self, image,num_sample):
-        """Initialization
+        """
+        Initialization
+
+        Args:
+            image: image data
+            num_sample: batch size at each iteration
         :param list_IDs: list of all 'label' ids to use in the generator
         :param labels: list of image labels (file names)
         :param image_path: path to images location
@@ -1547,16 +1576,20 @@ class StaticTransformDataGenerator(Sequence):
         #self.n_channels = n_channels
         #self.shuffle = shuffle
         #self.on_epoch_end()
-    # First, we define the constructor to initialize the configuration of the generator.
-    # we assume the path to the data is in a dataframe column.
-    # Hence, we define the x_col and y_col parameters.
-    # This could also be a directory name from where you can load the data.
-    #Another utility method we have is __len__.
-    #It essentially returns the number of steps in an epoch, using the samples and the batch size.
+
+        # First, we define the constructor to initialize the configuration of the generator.
+        # we assume the path to the data is in a dataframe column.
+        # Hence, we define the x_col and y_col parameters.
+        # This could also be a directory name from where you can load the data.
+        #Another utility method we have is __len__.
+        #It essentially returns the number of steps in an epoch, using the samples and the batch size.
+
     def __getitem__(self, index):
         """Generate one batch of data
-        :param index: index of the batch
-        :return: X and y when fitting. X only when predicting
+        Args:
+            index (int): Index of the batch.
+        Returns:
+            X and y when fitting. X only when predicting.
         """
         # Generate indexes of the batch
         indexes = self.indexes[index * self.batch_size:(index + 1) * self.batch_size]
@@ -1574,44 +1607,100 @@ class StaticTransformDataGenerator(Sequence):
             return X
 
     def __len__(self):
-            # Denotes the number of batches per epoch
-        return int(np.floor(len(self.list_IDs) / self.batch_size))
-        """Denotes the number of batches per epoch
-        :return: number of batches per epoch
         """
+        Denotes the number of batches per epoch
+        Returns:
+            Number of batches per epoch.
+        """
+        # Denotes the number of batches per epoch
+        return int(np.floor(len(self.list_IDs) / self.batch_size))
 
     def Blur (self,blur_limit=7, always_apply=False, p=1.0):
+        """Blurs the input image.
+
+        Args:
+            blur_limit (int, (int, int)): maximum kernel size for the blur.
+                Should be in range [3, inf). Default: 7.
+            always_apply (bool): apply the transform always. Default: False.
+            p (float): probability of applying the transform. Default: 1.0.
+
+        Returns:
+            Blurred image.
+        """
         for i in range(self.num_sample):
             img=Blur(self.image,blur_limit, always_apply, p)
             transform_type='Blur'
             return img
 
     def CLAHE (self,clip_limit=4.0, tile_grid_size=(8, 8), always_apply=False, p=1.0):
+        """Applies Contrast Limited Adaptive Histogram Equalization (CLAHE) to the input image.
+
+        Args:
+            clip_limit (float): upper threshold value for contrast limiting. Default: 4.0.
+            tile_grid_size (int, tuple): size of grid for histogram equalization. Default: (8, 8).
+            always_apply (bool): apply the transform always. Default: False.
+            p (float): probability of applying the transform. Default: 1.0.
+
+        Returns:
+            CLAHE adjusted image.
+        """
         for i in range(1):
             img=CLAHE(self.image,clip_limit, tile_grid_size, always_apply, p)
             transform_type='CLAHE'
             return img
 
     def ChannelDropout(self,channel_drop_range=(1, 1), fill_value=0, always_apply=False, p=1.0):
+        """Applies channel dropout to the input image.
+
+        Args:
+            channel_drop_range (tuple): range from which to randomly select number of channels to drop.
+                Should be in range (0, n_channels). Default: (1, 1).
+            fill_value (int, tuple): value to fill the dropped channels with. Default: 0.
+            always_apply (bool): apply the transform always. Default: False.
+            p (float): probability of applying the transform. Default: 1.0.
+
+        Returns:
+            Image with dropped channels filled with fill_value.
+        """
         for i in range(self.num_sample):
             img=ChannelDropout(self.image)
             transform_type='ChannelDropout'
             return img
 
-
     def ChannelShuffle (self,p=1.0):
+        """
+        Randomly shuffle the channels of the input image.
+
+        Args:
+        - p (float): Probability of applying the transformation.
+
+        Returns:
+        - numpy.ndarray: The transformed image.
+        """
         for i in range(self.num_sample):
             img=ChannelShuffle(self.image,p)
             transform_type='ChannelShuffle'
             return img
 
     def ColorJitter (self):
+        """
+        Apply color jittering to the input image.
+
+        Returns:
+        - numpy.ndarray: The transformed image.
+        """
         for i in range(self.num_sample):
             img=ColorJitter(self.image)
             transform_type='ColorJitter'
             return img
 
     def Downscale (self):
+        """
+        Downscale the input image.
+
+        Returns:
+        - numpy.ndarray: The transformed image.
+        """
         for i in range(self.num_sample):
             img=Downscale(self.image)
             transform_type='Downscale'
@@ -1619,6 +1708,12 @@ class StaticTransformDataGenerator(Sequence):
 
 
     def Emboss (self):
+        """
+        Apply embossing effect to the input image.
+
+        Returns:
+        - numpy.ndarray: The transformed image.
+        """
         for i in range(self.num_sample):
             img=Emboss(self.image)
             transform_type='Emboss'
@@ -1637,30 +1732,60 @@ class StaticTransformDataGenerator(Sequence):
             return img  """
 
     def FancyPCA (self):
+        """
+        Apply FancyPCA transformation to the input image.
+
+        Returns:
+        - numpy.ndarray: The transformed image.
+        """
         for i in range(self.num_sample):
             img=FancyPCA(self.image)
             transform_type='FancyPCA'
             return img
 
     def FromFloat (self):
+        """
+        Convert the input image from float to uint8.
+
+        Returns:
+        - numpy.ndarray: The transformed image.
+        """
         for i in range(self.num_sample):
             img=FromFloat(self.image)
             transform_type='FromFloat'
             return img
 
     def GaussNoise (self):
+        """
+        Apply Gaussian noise to the input image.
+
+        Returns:
+        - numpy.ndarray: The transformed image.
+        """
         for i in range(self.num_sample):
             img=GaussNoise(self.image)
             transform_type='GaussNoise'
             return img
 
     def GaussianBlur (self):
+        """
+        Apply Gaussian blur to the input image.
+
+        Returns:
+        - numpy.ndarray: The transformed image.
+        """ 
         for i in range(self.num_sample):
             img=GaussianBlur(self.image)
             transform_type='GaussianBlur'
             return img
 
     def GlassBlur (self):
+        """
+        Apply glass blur to the input image.
+
+        Returns:
+        - numpy.ndarray: The transformed image.
+        """
         for i in range(self.num_sample):
             img=GlassBlur(self.image)
             transform_type='GlassBlur'
@@ -1670,15 +1795,27 @@ class StaticTransformDataGenerator(Sequence):
         for i in range(self.num_sample):
             img=HistogramMatching(self.image)
             transform_type='HistogramMatching'
-            return img   """
+            return img"""
 
     def HueSaturationValue (self):
+        """
+        Apply HueSaturationValue transformation to the input image.
+
+        Returns:
+        - numpy.ndarray: The transformed image.
+        """
         for i in range(self.num_sample):
             img=HueSaturationValue(self.image)
             transform_type='HueSaturationValue'
             return img
 
     def ISONoise (self):
+        """
+        Apply ISO noise to the input image.
+
+        Returns:
+        - numpy.ndarray: The transformed image.
+        """
         for i in range(self.num_sample):
             img=ISONoise(self.image)
             transform_type='ISONoise'
@@ -1691,30 +1828,60 @@ class StaticTransformDataGenerator(Sequence):
             return img """
 
     def InvertImg (self):
+        """
+        Invert the colors of the input image.
+
+        Returns:
+        - numpy.ndarray: The transformed image.
+        """
         for i in range(self.num_sample):
             img=InvertImg(self.image)
             transform_type='InvertImg'
             return img
 
     def MedianBlur (self):
+        """
+        Apply median blur filter to the input image.
+
+        Returns:
+        - numpy.ndarray: The transformed image.
+        """
         for i in range(self.num_sample):
             img=MedianBlur(self.image)
             transform_type='MedianBlur'
             return img
 
     def MotionBlur (self):
+        """
+        Apply motion blur filter to the input image.
+
+        Returns:
+        - numpy.ndarray: The transformed image.
+        """
         for i in range(self.num_sample):
             img=MotionBlur(self.image)
             transform_type='MotionBlur'
             return img
 
     def MultiplicativeNoise (self):
+        """
+        Add multiplicative noise to the input image.
+
+        Returns:
+        - numpy.ndarray: The transformed image.
+        """
         for i in range(self.num_sample):
             img=MultiplicativeNoise(self.image)
             transform_type='MultiplicativeNoise'
             return img
 
     def Normalize (self):
+        """
+        Normalize the input image.
+
+        Returns:
+        - numpy.ndarray: The transformed image.
+        """
         for i in range(self.num_sample):
             img=Normalize(self.image)
             transform_type='Normalize'
@@ -1727,84 +1894,168 @@ class StaticTransformDataGenerator(Sequence):
             return img"""
 
     def Posterize (self):
+        """
+        Apply posterize transformation to the image.
+
+        Returns:
+            ndarray: Transformed image.
+        """
         for i in range(self.num_sample):
             img=Posterize(self.image)
             transform_type='Posterize'
             return img
 
     def RGBShift (self):
+        """
+        Apply RGB shift transformation to the image.
+
+        Returns:
+            ndarray: Transformed image.
+        """
         for i in range(self.num_sample):
             img=RGBShift(self.image)
             transform_type='RGBShift'
             return img
 
     def Sharpen (self):
+        """
+        Apply sharpen transformation to the image.
+
+        Returns:
+            ndarray: Transformed image.
+        """
         for i in range(self.num_sample):
             img=Sharpen(self.image)
             transform_type='Sharpen'
             return img
 
     def Solarize (self):
+        """
+        Apply solarize transformation to the image.
+
+        Returns:
+            ndarray: Transformed image.
+        """
         for i in range(self.num_sample):
             img=Solarize(self.image)
             transform_type='Solarize'
             return img
 
     def Superpixels (self):
+        """
+        Apply superpixels transformation to the image.
+
+        Returns:
+            ndarray: Transformed image.
+        """
         for i in range(self.num_sample):
             img=Superpixels(self.image)
             transform_type='Superpixels'
             return img
 
     def ToFloat (self):
+        """
+        Convert image to float.
+
+        Returns:
+            ndarray: Transformed image.
+        """
         for i in range(self.num_sample):
             img=ToFloat(self.image)
             transform_type='ToFloat'
             return img
 
     def ToGray (self):
+        """
+        Convert image to grayscale.
+
+        Returns:
+            ndarray: Transformed image.
+        """
         for i in range(self.num_sample):
             img=ToGray(self.image)
             transform_type='ToGray'
             return img
 
     def ToSepia (self):
+        """
+        Convert image to sepia tone.
+
+        Returns:
+            ndarray: Transformed image.
+        """
         for i in range(self.num_sample):
             img=ToSepia(self.image)
             transform_type='ToSepia'
             return img
 
     def VerticalFlip (self):
+        """
+        Flip image vertically.
+
+        Returns:
+            ndarray: Transformed image.
+        """
         for i in range(self.num_sample):
             img=VerticalFlip(self.image)
             transform_type='VerticalFlip'
             return img
 
     def HorizontalFlip (self):
+        """
+        Flip image horizontally.
+
+        Returns:
+            ndarray: Transformed image.
+        """
         for i in range(self.num_sample):
             img=HorizontalFlip(self.image)
             transform_type='HorizontalFlip'
             return img
 
     def Flip (self):
+        """
+        Flip image both vertically and horizontally.
+
+        Returns:
+            ndarray: Transformed image.
+        """
         for i in range(self.num_sample):
             img=Flip(self.image)
             transform_type='Flip'
             return img
 
     def Transpose (self):
+        """
+        Transpose image.
+
+        Returns:
+            ndarray: Transformed image.
+        """
         for i in range(self.num_sample):
             img=Transpose(self.image)
             transform_type='Transpose'
             return img
 
     def OpticalDistortion (self):
+        """
+        Apply optical distortion to the image.
+
+        Returns:
+            ndarray: Transformed image.
+        """
         for i in range(self.num_sample):
             img=OpticalDistortion(self.image)
             transform_type='OpticalDistortion'
             return img
 
     def GridDistortion (self):
+        """
+        Apply grid distortion to the image.
+
+        Returns:
+            ndarray: Transformed image.
+        """
         for i in range(self.num_sample):
             img=GridDistortion(self.image)
             transform_type='GridDistortion'
@@ -1818,18 +2069,46 @@ class StaticTransformDataGenerator(Sequence):
     """
 
     def JpegCompression (self):
+        """
+        Apply JPEG compression to the image.
+
+        Args:
+            quality (int): Quality level of the JPEG compression. Default is 90.
+
+        Returns:
+            ndarray: Transformed image.
+        """
         for i in range(self.num_sample):
             img=JpegCompression(self.image)
             transform_type='JpegCompression'
             return img
 
     def Cutout (self):
+        """
+        Apply cutout to the image.
+
+        Args:
+            size (tuple[int, int]): Size of the cutout window.
+
+        Returns:
+            ndarray: Transformed image.
+        """
         for i in range(self.num_sample):
             img=Cutout(self.image)
             transform_type='Cutout'
             return img
 
     def CoarseDropout (self):
+        """
+        Apply coarse dropout to the image.
+
+        Args:
+            size (tuple[int, int]): Size of the dropout window.
+            p (float): Probability of applying the transformation.
+
+        Returns:
+            ndarray: Transformed image.
+        """
         for i in range(self.num_sample):
             img=CoarseDropout(self.image)
             transform_type='CoarseDropout'
@@ -1843,12 +2122,35 @@ class StaticTransformDataGenerator(Sequence):
     """
 
     def MaskDropout (self):
+        """
+        Randomly drop rectangular regions of an image and fill with black pixels.
+
+        Args:
+            p (float): Probability of applying the transformation.
+            max_objects (int): Maximum number of rectangular regions to drop.
+            image_shape (tuple): Shape of the input image.
+
+        Returns:
+            ndarray: Transformed image.
+        """
         for i in range(self.num_sample):
             img=MaskDropout(self.image)
             transform_type='MaskDropout'
             return img
 
     def GridDropout (self):
+        """
+        Randomly drop out square regions of an image and fill with black pixels.
+
+        Args:
+            p (float): Probability of applying the transformation.
+            mask_size (int): Size of the square mask.
+            mask_color (str): Color to fill dropped regions with.
+            offset (int): Offset of the dropped regions.
+
+        Returns:
+            ndarray: Transformed image.
+        """
         for i in range(self.num_sample):
             img=GridDropout(self.image)
             transform_type='GridDropout'
@@ -1876,9 +2178,13 @@ class StaticTransformDataGenerator(Sequence):
     """
 
     def _load_grayscale_image(self, image_path):
-        """Load grayscale image
-        :param image_path: path to image to load
-        :return: loaded image
+        """Load grayscale image.
+
+        Args:
+            image_path (str): Path to image to load.
+
+        Returns:
+            ndarray: Loaded image.
         """
         img = cv2.imread(image_path)
         img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
