@@ -91,16 +91,24 @@ from functools import wraps
 
 
 
-# #### Blur
-def Blur(image,blur_limit=7, always_apply=False, p=1.0):
+# Blur
+def Blur(image, blur_limit=(3, 7), always_apply=False, p=1.0):
+    """
+    Blur the input image using a random-sized kernel.
 
-    """Blur the input image using a random-sized kernel.
     Args:
-        blur_limit (int, (int, int)): maximum kernel size for blurring the input image.
+        image (numpy.ndarray): Input image to be blurred.
+        blur_limit (tuple or int): Maximum kernel size for blurring the input image.
             Should be in range [3, inf). Default: (3, 7).
-        p (float): probability of applying the transform. Default: 1.0.
+        always_apply (bool): Whether to always apply the transform. Default: False.
+        p (float): Probability of applying the transform. Default: 1.0.
+
+    Returns:
+        numpy.ndarray: Blurred image.
+
     Targets:
         image
+
     Image types:
         uint8, float32
     """
@@ -109,18 +117,26 @@ def Blur(image,blur_limit=7, always_apply=False, p=1.0):
     transformed_image = transformed["image"]
     return transformed_image
 
-# #### CLAHE ( Contrast Limited Adaptive Histogram Equalization )
 
+# CLAHE ( Contrast Limited Adaptive Histogram Equalization )
+def CLAHE(image, clip_limit=(1, 4), tile_grid_size=(8, 8), always_apply=False, p=1.0):
+    """
+    Apply Contrast Limited Adaptive Histogram Equalization to the input image.
 
-def CLAHE(image,clip_limit=4.0, tile_grid_size=(8, 8), always_apply=False, p=1.0):
-    """Apply Contrast Limited Adaptive Histogram Equalization to the input image.
     Args:
-        clip_limit (float or (float, float)): upper threshold value for contrast limiting.
+        image (numpy.ndarray): Input image to be processed.
+        clip_limit (float or tuple of float): Upper threshold value for contrast limiting.
             If clip_limit is a single float value, the range will be (1, clip_limit). Default: (1, 4).
-        tile_grid_size ((int, int)): size of grid for histogram equalization. Default: (8, 8).
-        p (float): probability of applying the transform. Default: 1.0.
+        tile_grid_size (tuple of int): Size of grid for histogram equalization. Default: (8, 8).
+        always_apply (bool): Whether to always apply the transform. Default: False.
+        p (float): Probability of applying the transform. Default: 1.0.
+
+    Returns:
+        numpy.ndarray: Processed image.
+
     Targets:
         image
+
     Image types:
         uint8
     """
@@ -129,96 +145,119 @@ def CLAHE(image,clip_limit=4.0, tile_grid_size=(8, 8), always_apply=False, p=1.0
     transformed_image = transformed["image"]
     return transformed_image
 
-
-# #### ChannelDropout
-
-
+# ChannelDropout
 def ChannelDropout(image,channel_drop_range=(1, 1), fill_value=0, always_apply=False, p=1.0):
-    """Randomly Drop Channels in the input Image.
+
+    """
+    Randomly drop channels in the input image.
+
     Args:
-        channel_drop_range (int, int): range from which we choose the number of channels to drop. default = (1,1)
-        fill_value (int, float): pixel value for the dropped channel. defaul =0
-        p (float): probability of applying the transform. Default: 1.0.
+        image (numpy.ndarray): Input image to randomly drop channels.
+        channel_drop_range (tuple of int): Range from which we choose the number of channels to drop. Default: (1, 1).
+        fill_value (int or float): Pixel value for the dropped channel. Default: 0.
+        always_apply (bool): Whether to always apply the transform. Default: False.
+        p (float): Probability of applying the transform. Default: 1.0.
+
+    Returns:
+        numpy.ndarray: Image with randomly dropped channels.
+
     Targets:
         image
+
     Image types:
-        uint8, uint16, unit32, float32
+        uint8, uint16, uint32, float32
     """
     transform = A.Compose([A.augmentations.ChannelDropout(channel_drop_range, fill_value, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
 
+# ChannelShuffle
+def ChannelShuffle(image, p=1.0):
+    """
+    Randomly rearrange channels of the input RGB image.
 
-# #### ChannelShuffle
-
-
-def ChannelShuffle(image,p=1.0):
-    """Randomly rearrange channels of the input RGB image.
     Args:
-    p (float): probability of applying the transform. Default: 1.0.
+        p (float): Probability of applying the transform. Default: 1.0.
+
+    Returns:
+        numpy.ndarray: Image with shuffled channels.
+
     Targets:
-    image
+        image
+
     Image types:
-    uint8, float32
+        uint8, float32
     """
     transform = A.Compose([A.augmentations.transforms.ChannelShuffle(p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
 
-
-# #### ColorJitter
+# ColorJitter
 
 
 def ColorJitter (image,brightness=0.2, contrast=0.2, saturation=0.2, hue=0.2, always_apply=False, p=1.0):
-    """Randomly changes the brightness, contrast, and saturation of an image. Compared to ColorJitter from torchvision,
+    """
+    Randomly changes the brightness, contrast, and saturation of an image. Compared to ColorJitter from torchvision,
     this transform gives a little bit different results because Pillow (used in torchvision) and OpenCV (used in
     Albumentations) transform an image to HSV format by different formulas. Another difference - Pillow uses uint8
     overflow, but we use value saturation.
+
     Args:
-    brightness (float or tuple of float (min, max)): How much to jitter brightness.
-        brightness_factor is chosen uniformly from [max(0, 1 - brightness), 1 + brightness]
-        or the given [min, max]. Should be non negative numbers.
-    contrast (float or tuple of float (min, max)): How much to jitter contrast.
-        contrast_factor is chosen uniformly from [max(0, 1 - contrast), 1 + contrast]
-        or the given [min, max]. Should be non negative numbers.
-    saturation (float or tuple of float (min, max)): How much to jitter saturation.
-        saturation_factor is chosen uniformly from [max(0, 1 - saturation), 1 + saturation]
-        or the given [min, max]. Should be non negative numbers.
-    hue (float or tuple of float (min, max)): How much to jitter hue.
-        hue_factor is chosen uniformly from [-hue, hue] or the given [min, max].
-        Should have 0 <= hue <= 0.5 or -0.5 <= min <= max <= 0.5.
+        image (numpy.ndarray): The image to be transformed.
+        brightness (float or tuple of float (min, max)): How much to jitter brightness.
+            brightness_factor is chosen uniformly from [max(0, 1 - brightness), 1 + brightness]
+            or the given [min, max]. Should be non negative numbers.
+        contrast (float or tuple of float (min, max)): How much to jitter contrast.
+            contrast_factor is chosen uniformly from [max(0, 1 - contrast), 1 + contrast]
+            or the given [min, max]. Should be non negative numbers.
+        saturation (float or tuple of float (min, max)): How much to jitter saturation.
+            saturation_factor is chosen uniformly from [max(0, 1 - saturation), 1 + saturation]
+            or the given [min, max]. Should be non negative numbers.
+        hue (float or tuple of float (min, max)): How much to jitter hue.
+            hue_factor is chosen uniformly from [-hue, hue] or the given [min, max].
+            Should have 0 <= hue <= 0.5 or -0.5 <= min <= max <= 0.5.
+        always_apply (bool): Whether to always apply the transform.
+        p (float): The probability of applying the transform.
+
+    Returns:
+        numpy.ndarray: The transformed image.
     """
-    transform = A.Compose([A.ColorJitter (brightness, contrast, saturation, hue, always_apply, p)])
+    transform = A.Compose([A.ColorJitter(brightness=brightness, contrast=contrast, saturation=saturation, hue=hue, always_apply=always_apply, p=p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
 
-
-# #### Downscale
-
-
+# Downscale
 def Downscale (image,scale_min=0.25, scale_max=0.25, interpolation=0, always_apply=False, p=1.0):
-    """Decreases image quality by downscaling and upscaling back.
+    """
+    Decreases image quality by downscaling and upscaling back.
+
     Args:
-        scale_min (float): lower bound on the image scale. Should be < 1.
-        scale_max (float):  lower bound on the image scale. Should be .
-        interpolation: cv2 interpolation method. cv2.INTER_NEAREST by default
+        image (numpy.ndarray): The image to be downscaled and upscaled back.
+        scale_min (float): The lower bound on the image scale. Should be less than 1.
+        scale_max (float): The upper bound on the image scale. Should be less than 1.
+        interpolation (int): The cv2 interpolation method. cv2.INTER_NEAREST by default.
+        always_apply (bool): Whether to always apply the transform.
+        p (float): The probability of applying the transform.
+
     Targets:
         image
+
     Image types:
-        uint8, float32
+        numpy.ndarray of type uint8 or float32.
+        
+    Returns:
+        numpy.ndarray: The transformed image.
     """
-    transform = A.Compose([A.augmentations.transforms.Downscale(scale_min, scale_max, interpolation, always_apply, p)])
+    transform = A.Compose([A.augmentations.transforms.Downscale(scale_min=scale_min, scale_max=scale_max, interpolation=interpolation, always_apply=always_apply, p=p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
 
 
-# #### Emboss
-
-
+# Emboss
 def Emboss (image,alpha=(0.2, 0.5), strength=(0.2, 0.7), always_apply=False, p=1.0):
     """Emboss the input image and overlays the result with the original image.
     Args:
@@ -235,43 +274,54 @@ def Emboss (image,alpha=(0.2, 0.5), strength=(0.2, 0.7), always_apply=False, p=1
     return transformed_image
 
 
-# #### Equalize
+# Equalize
 """
-def Equalize (image,mode='cv', by_channels=True, mask=None, mask_params=None, always_apply=False, p=1.0):
-    Equalize the image histogram.
+    Embosses the input image and overlays the result with the original image.
+
     Args:
-        mode (str): {'cv', 'pil'}. Use OpenCV or Pillow equalization method.
-        by_channels (bool): If True, use equalization by channels separately,
-            else convert image to YCbCr representation and use equalization by `Y` channel.
-        mask (np.ndarray, callable): If given, only the pixels selected by
-            the mask are included in the analysis. Maybe 1 channel or 3 channel array or callable.
-            Function signature must include `image` argument.
-        mask_params (list of str): Params for mask function.
+        image (numpy.ndarray): The input image to be embossed.
+        alpha (tuple of float): The range to choose the visibility of the embossed image. At 0, only the original image is
+            visible; at 1.0 only its embossed version is visible. Default: (0.2, 0.5).
+        strength (tuple of float): The strength range of the embossing. Default: (0.2, 0.7).
+        always_apply (bool): Whether to always apply the transform.
+        p (float): The probability of applying the transform.
+
     Targets:
         image
-    Image types:
-        uint8
-    transform = A.Compose([A.augmentations.transforms.Equalize (mode, by_channels, mask, mask_params, always_apply, p)])
+
+    Returns:
+        numpy.ndarray: The transformed image.
+
+    transform = A.Compose([A.augmentations.transforms.Emboss(alpha=alpha, strength=strength, always_apply=always_apply, p=p)])
     transformed = transform(image=image)
-    #transformed_image = transformed["image"]
+    transformed_image = transformed["image"]
     return transformed_image
 """
 
 
-# #### FDA (Fourier Domain Adaptation
+# FDA (Fourier Domain Adaptation
 
 """
 def FDA (image, reference_images, beta_limit=0.1, read_fn='', always_apply=False, p=1.0):
     Apply Contrast Limited Adaptive Histogram Equalization to the input image.
+
     Args:
-        clip_limit (float or (float, float)): upper threshold value for contrast limiting.
-            If clip_limit is a single float value, the range will be (1, clip_limit). Default: (1, 4).
-        tile_grid_size ((int, int)): size of grid for histogram equalization. Default: (8, 8).
-        p (float): probability of applying the transform. Default: 1.0.
+        image (numpy.ndarray): Input image to be transformed.
+        reference_images (numpy.ndarray): Reference images for the transformation.
+        beta_limit (float): Parameter to control contrast amplification. Default: 0.1.
+        read_fn (str): Path to the file containing reference images. Default: ''.
+        always_apply (bool): Whether to always apply the transformation. Default: False.
+        p (float): Probability of applying the transform. Default: 1.0.
+
+    Returns:
+        numpy.ndarray: The transformed image.
+
     Targets:
         image
+
     Image types:
         uint8
+
     Refer:
         https://github.com/YanchaoYang/FDA
 
@@ -282,98 +332,126 @@ def FDA (image, reference_images, beta_limit=0.1, read_fn='', always_apply=False
 """
 
 
-# #### FancyPCA
+# FancyPCA
 def FancyPCA (image,alpha=0.1, always_apply=False, p=1.0):
-    """Augment RGB image using FancyPCA from Krizhevsky's paper
-    "ImageNet Classification with Deep Convolutional Neural Networks"
+    """Augment RGB image using FancyPCA from Krizhevsky's paper "ImageNet Classification with Deep Convolutional 
+    Neural Networks".
+
     Args:
-        alpha (float):  how much to perturb/scale the eigen vecs and vals.
-            scale is samples from gaussian distribution (mu=0, sigma=alpha)
+        image (ndarray): RGB image to be augmented.
+        alpha (float): Scale factor for perturbation of eigenvalues and eigenvectors. Scale is sampled from a 
+            Gaussian distribution with mu=0 and sigma=alpha. Default is 0.1.
+        always_apply (bool): Indicates whether the transform should always be applied, regardless of the given 
+            probability. Default is False.
+        p (float): Probability of applying the transform. Default is 1.0.
+
+    Returns:
+        ndarray: Augmented image.
+
     Targets:
         image
+
     Image types:
         3-channel uint8 images only
+
     Credit:
-        http://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks.pdf
-        https://deshanadesai.github.io/notes/Fancy-PCA-with-Scikit-Image
-        https://pixelatedbrian.github.io/2018-04-29-fancy_pca/
+        - Krizhevsky, A., Sutskever, I., & Hinton, G. E. (2012). ImageNet classification with deep convolutional
+            neural networks. Advances in neural information processing systems, 25, 1097-1105.
+        - Deshanadesai.github.io. (2022). Fancy PCA with Scikit-Image. [online]
+            Available at: https://deshanadesai.github.io/notes/Fancy-PCA-with-Scikit-Image [Accessed 23 Apr. 2023].
+        - Pixelatedbrian.github.io. (2022). Fancy PCA. [online]
+            Available at: https://pixelatedbrian.github.io/2018-04-29-fancy_pca/ [Accessed 23 Apr. 2023].
     """
+
     transform = A.Compose([A.augmentations.transforms.FancyPCA (alpha, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
 
 
-# #### FromFloat
+# FromFloat
 def FromFloat (image,dtype='uint16', max_value=None, always_apply=False, p=1.0):
-    """Take an input array where all values should lie in the range [0, 1.0], multiply them by `max_value` and then
+    """Converts input array where all values should lie in the range [0, 1.0] to values in the range [0, max_value] and
     cast the resulted value to a type specified by `dtype`. If `max_value` is None the transform will try to infer
-    the maximum value for the data type from the `dtype` argument.
-    This is the inverse transform for :class:`~albumentations.augmentations.transforms.ToFloat`.
+    the maximum value for the data type from the `dtype` argument. This is the inverse transform for
+    `albumentations.augmentations.transforms.ToFloat`.
+
     Args:
-        max_value (float): maximum possible input value. Default: None.
-        dtype (string or numpy data type): data type of the output. See the `'Data types' page from the NumPy docs`_.
-            Default: 'uint16'.
-        p (float): probability of applying the transform. Default: 1.0.
+        image: Input image.
+        max_value (float): Maximum possible input value. Default: None.
+        dtype (str or np.dtype): Data type of the output. Default: 'uint16'.
+        always_apply (bool): If True, apply the transform to all images, otherwise only apply to a random subset.
+            Default: False.
+        p (float): Probability of applying the transform. Default: 1.0.
+
     Targets:
         image
+
     Image types:
         float32
-    .. _'Data types' page from the NumPy docs:
-        https://docs.scipy.org/doc/numpy/user/basics.types.html
+
+    Returns:
+        The transformed image.
     """
-    transform = A.Compose([A.augmentations.transforms.FromFloat (dtype, max_value, always_apply, p)])
+    transform = A.Compose([A.augmentations.transforms.FromFloat(dtype=dtype, max_value=max_value,
+                                                                always_apply=always_apply, p=p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
 
-
-# #### GaussNoise
+# GaussNoise
 def GaussNoise (image,var_limit=(10.0, 50.0), mean=0, per_channel=True, always_apply=False, p=1.0):
-    """Apply gaussian noise to the input image.
+    """Apply Gaussian noise to the input image.
+
     Args:
-        var_limit ((float, float) or float): variance range for noise. If var_limit is a single float, the range
+        var_limit (float or tuple of floats): variance range for noise. If var_limit is a single float, the range
             will be (0, var_limit). Default: (10.0, 50.0).
         mean (float): mean of the noise. Default: 0
         per_channel (bool): if set to True, noise will be sampled for each channel independently.
             Otherwise, the noise will be sampled once for all channels. Default: True
+        always_apply (bool): apply the transform to every input. Default: False
         p (float): probability of applying the transform. Default: 1.0.
+
     Targets:
         image
+
     Image types:
         uint8, float32
     """
-    transform = A.Compose([A.augmentations.transforms.GaussNoise (var_limit, mean, per_channel, always_apply, p)])
+    transform = A.Compose([A.augmentations.transforms.GaussNoise(var_limit=var_limit, mean=mean, per_channel=per_channel,
+                                                                    always_apply=always_apply, p=p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
 
 
-# #### GaussianBlur
+# GaussianBlur
 def GaussianBlur (image, blur_limit=(3, 7), sigma_limit=0, always_apply=False, p=1.0):
-    """Blur the input image using a Gaussian filter with a random kernel size.
+    """
+    Blur the input image using a Gaussian filter with a random kernel size.
     Args:
-        blur_limit (int, (int, int)): maximum Gaussian kernel size for blurring the input image.
+        image (numpy.ndarray): Input image to be blurred.
+        blur_limit (int or tuple(int, int)): Maximum Gaussian kernel size for blurring the input image.
             Must be zero or odd and in range [0, inf). If set to 0 it will be computed from sigma
             as `round(sigma * (3 if img.dtype == np.uint8 else 4) * 2 + 1) + 1`.
-            If set single value `blur_limit` will be in range (0, blur_limit).
+            If set to a single value, `blur_limit` will be in range (0, blur_limit).
             Default: (3, 7).
-        sigma_limit (float, (float, float)): Gaussian kernel standard deviation. Must be greater in range [0, inf).
-            If set single value `sigma_limit` will be in range (0, sigma_limit).
+        sigma_limit (float or tuple(float, float)): Gaussian kernel standard deviation. Must be greater in range [0, inf).
+            If set to a single value, `sigma_limit` will be in range (0, sigma_limit).
             If set to 0 sigma will be computed as `sigma = 0.3*((ksize-1)*0.5 - 1) + 0.8`. Default: 0.
-        p (float): probability of applying the transform. Default: 1.0.
+        always_apply (bool): Whether to always apply the transform. Default: False.
+        p (float): Probability of applying the transform. Default: 1.0.
     Targets:
         image
     Image types:
         uint8, float32
     """
-    transform = A.Compose([A.augmentations.transforms.GaussianBlur (blur_limit, sigma_limit, always_apply, p)])
+    transform = A.Compose([A.augmentations.transforms.GaussianBlur(blur_limit, sigma_limit, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
 
-
-# #### GlassBlur
+# GlassBlur
 
 
 def GlassBlur (image,sigma=0.7, max_delta=4, iterations=2, always_apply=False, mode='fast', p=1.0):
@@ -399,335 +477,479 @@ def GlassBlur (image,sigma=0.7, max_delta=4, iterations=2, always_apply=False, m
     return transformed_image
 
 
-# #### HistogramMatching
+# HistogramMatching
 """
 def HistogramMatching (image,reference_images, blend_ratio=(0.5, 1.0), read_fn="", always_apply=False, p=1.0):
-    Apply histogram matching. It manipulates the pixels of an input image so that its histogram matches
-    the histogram of the reference image. If the images have multiple channels, the matching is done independently
-    for each channel, as long as the number of channels is equal in the input image and the reference.
-    Histogram matching can be used as a lightweight normalisation for image processing,
-    such as feature matching, especially in circumstances where the images have been taken from different
-    sources or in different conditions (i.e. lighting).
-    See:
-        https://scikit-image.org/docs/dev/auto_examples/color_exposure/plot_histogram_matching.html
+    Apply histogram matching to an input image. This manipulates the pixels of the input image so that its
+    histogram matches the histogram of the reference image. If the images have multiple channels, the matching is
+    done independently for each channel, as long as the number of channels is equal in the input image and the
+    reference image.
+
+    Histogram matching can be used as a lightweight normalization for image processing, such as feature matching,
+    especially in circumstances where the images have been taken from different sources or in different conditions
+    (i.e. lighting).
+
+    See: https://scikit-image.org/docs/dev/auto_examples/color_exposure/plot_histogram_matching.html
+
     Args:
-        reference_images (List[str] or List(np.ndarray)): List of file paths for reference images
-            or list of reference images.
-        blend_ratio (float, float): Tuple of min and max blend ratio. Matched image will be blended with original
-            with random blend factor for increased diversity of generated images.
-        read_fn (Callable): Used-defined function to read image. Function should get image path and return numpy
+        image (numpy.ndarray): Input image.
+        reference_images (List[str] or List[numpy.ndarray]): List of file paths for reference images or list of
+            reference images.
+        blend_ratio (Tuple[float, float]): Tuple of min and max blend ratio. Matched image will be blended with
+            original with random blend factor for increased diversity of generated images.
+        read_fn (Callable): User-defined function to read image. Function should get image path and return numpy
             array of image pixels.
-        p (float): probability of applying the transform. Default: 1.0.
+        always_apply (bool): If True, the transform is always applied to the image.
+        p (float): Probability of applying the transform. Default: 1.0.
+
     Targets:
         image
+
     Image types:
         uint8, uint16, float32
-    transform = A.Compose([A.augmentations.domain_adaptation.HistogramMatching (reference_images, blend_ratio, read_fn, always_apply, p) ])
+
+    Returns:
+        numpy.ndarray: Transformed image.
+
+    transform = A.Compose([A.augmentations.domain_adaptation.HistogramMatching(reference_images, blend_ratio, read_fn, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
 """
 
 
-# #### HueSaturationValue
+# HueSaturationValue
 def HueSaturationValue (image,hue_shift_limit=20, sat_shift_limit=30, val_shift_limit=20, always_apply=False, p=1.0):
     """Randomly change hue, saturation and value of the input image.
+
     Args:
-        hue_shift_limit ((int, int) or int): range for changing hue. If hue_shift_limit is a single int, the range
-            will be (-hue_shift_limit, hue_shift_limit). Default: (-20, 20).
-        sat_shift_limit ((int, int) or int): range for changing saturation. If sat_shift_limit is a single int,
-            the range will be (-sat_shift_limit, sat_shift_limit). Default: (-30, 30).
-        val_shift_limit ((int, int) or int): range for changing value. If val_shift_limit is a single int, the range
-            will be (-val_shift_limit, val_shift_limit). Default: (-20, 20).
-        p (float): probability of applying the transform. Default: 1.0.
+        image (numpy.ndarray): Input image.
+        hue_shift_limit (int or tuple of ints): Range for changing hue. If hue_shift_limit is a single int, the range
+            will be (-hue_shift_limit, hue_shift_limit). Default: 20.
+        sat_shift_limit (int or tuple of ints): Range for changing saturation. If sat_shift_limit is a single int,
+            the range will be (-sat_shift_limit, sat_shift_limit). Default: 30.
+        val_shift_limit (int or tuple of ints): Range for changing value. If val_shift_limit is a single int, the range
+            will be (-val_shift_limit, val_shift_limit). Default: 20.
+        always_apply (bool): If True, apply the transform to all input images. If False, apply the transform to
+            randomly selected images. Default: False.
+        p (float): Probability of applying the transform. Default: 1.0.
+
     Targets:
         image
+
     Image types:
         uint8, float32
     """
-    transform = A.Compose([A.augmentations.transforms.HueSaturationValue (hue_shift_limit, sat_shift_limit, val_shift_limit, always_apply, p)])
+    transform = A.Compose([
+        A.augmentations.transforms.HueSaturationValue(hue_shift_limit=hue_shift_limit,
+                                                        sat_shift_limit=sat_shift_limit,
+                                                        val_shift_limit=val_shift_limit,
+                                                        always_apply=always_apply,
+                                                        p=p)
+    ])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
 
 
-# #### ISONoise
+# ISONoise
 def ISONoise (image,color_shift=(0.01, 0.05), intensity=(0.1, 0.5), always_apply=False, p=1.0):
-    """
-    Apply camera sensor noise.
+    """Apply camera sensor noise to the input image.
+
     Args:
-        color_shift (float, float): variance range for color hue change.
-            Measured as a fraction of 360 degree Hue angle in HLS colorspace.
-        intensity ((float, float): Multiplicative factor that control strength
-            of color and luminace noise.
-        p (float): probability of applying the transform. Default: 0.5.
+        color_shift (float, float): Variance range for color hue change.
+            Measured as a fraction of 360 degree Hue angle in HLS colorspace. Default: (0.01, 0.05).
+        intensity ((float, float): Multiplicative factor that controls the strength
+            of color and luminance noise. Default: (0.1, 0.5).
+        always_apply (bool): Whether to always apply the transform. Default: False.
+        p (float): Probability of applying the transform. Default: 0.5.
+
     Targets:
         image
+
     Image types:
         uint8
+
+    Returns:
+        numpy.ndarray: Transformed image.
     """
-    transform = A.Compose([A.augmentations.transforms.ISONoise (color_shift, intensity, always_apply, p)])
+    transform = A.Compose([A.augmentations.transforms.ISONoise(color_shift, intensity, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
 
-# #### ImageCompression
+# ImageCompression
 """
 def ImageCompression (image,quality_lower=99, quality_upper=100, compression_type=None, always_apply=False, p=1.0):
     Decrease Jpeg, WebP compression of an image.
+
     Args:
-        quality_lower (float): lower bound on the image quality.
+        image (numpy.ndarray): Input image.
+        quality_lower (float): Lower bound on the image quality.
                                 Should be in [0, 100] range for jpeg and [1, 100] for webp.
-        quality_upper (float): upper bound on the image quality.
+        quality_upper (float): Upper bound on the image quality.
                                 Should be in [0, 100] range for jpeg and [1, 100] for webp.
-        compression_type (ImageCompressionType): should be ImageCompressionType.JPEG or ImageCompressionType.WEBP.
+        compression_type (ImageCompressionType): Should be ImageCompressionType.JPEG or ImageCompressionType.WEBP.
             Default: ImageCompressionType.JPEG
+        always_apply (bool): Whether to always apply the transformation.
+        p (float): Probability of applying the transform. Default: 1.0.
+
+    Returns:
+        numpy.ndarray: Transformed image.
+
     Targets:
         image
     Image types:
         uint8, float32
-    transform = A.Compose([A.augmentations.transforms.ImageCompression (quality_lower, quality_upper, compression_type, always_apply, p)])
+
+    transform = A.Compose([A.augmentations.transforms.ImageCompression(quality_lower, quality_upper, compression_type, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
 """
 
-# #### InvertImg
+# InvertImg
 def InvertImg(image,p=1.0):
-    """Invert the input image by subtracting pixel values from 255.
+    """
+    Invert the input image by subtracting pixel values from 255.
+
     Args:
         p (float): probability of applying the transform. Default: 1.0.
+
     Targets:
         image
+
     Image types:
         uint8
     """
+
     transform = A.Compose([A.augmentations.transforms.InvertImg(p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
 
 
-# #### MedianBlur
+# MedianBlur
 def MedianBlur (image,blur_limit=7, always_apply=False, p=1.0):
-    """Blur the input image using a median filter with a random aperture linear size.
+    """
+    Apply median blur to the input image using a random aperture linear size.
+
     Args:
-        blur_limit (int): maximum aperture linear size for blurring the input image.
+        image: Input image.
+        blur_limit (tuple[int]): Maximum aperture linear size for blurring the input image.
             Must be odd and in range [3, inf). Default: (3, 7).
-        p (float): probability of applying the transform. Default: 1.0.
+        p (float): Probability of applying the transform. Default: 1.0.
+
     Targets:
         image
+
     Image types:
         uint8, float32
     """
-    transform = A.Compose([A.augmentations.transforms.MedianBlur (blur_limit, always_apply, p)])
+    transform = A.Compose([A.augmentations.transforms.MedianBlur(blur_limit, always_apply=False, p=p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
 
-# #### MotionBlur
+# MotionBlur
 def MotionBlur(image,blur_limit=7,p=1.0):
     """Apply motion blur to the input image using a random-sized kernel.
+
     Args:
-        blur_limit (int): maximum kernel size for blurring the input image.
-            Should be in range [3, inf). Default: (3, 7).
+        image (numpy.ndarray): input image.
+        blur_limit (tuple[int]): maximum kernel size for blurring the input image. Should be in range [3, inf).
+            Default: (3, 7).
         p (float): probability of applying the transform. Default: 1.0.
+
+    Returns:
+        numpy.ndarray: transformed image.
+
     Targets:
         image
     Image types:
         uint8, float32
     """
-    transform = A.Compose([A.augmentations.transforms.MotionBlur(blur_limit,p)])
+    transform = A.Compose([A.augmentations.transforms.MotionBlur(blur_limit, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
 
-# #### MultiplicativeNoise
+# MultiplicativeNoise
 def MultiplicativeNoise (image,multiplier=(0.9, 1.1), per_channel=False, elementwise=False, always_apply=False, p=1.0):
-    """Multiply image to random number or array of numbers.
+    """
+    Multiply image to random number or array of numbers.
+
     Args:
-        multiplier (float or tuple of floats): If single float image will be multiplied to this number.
-            If tuple of float multiplier will be in range `[multiplier[0], multiplier[1])`. Default: (0.9, 1.1).
-        per_channel (bool): If `False`, same values for all channels will be used.
-            If `True` use sample values for each channels. Default False.
-        elementwise (bool): If `False` multiply multiply all pixels in an image with a random value sampled once.
-            If `True` Multiply image pixels with values that are pixelwise randomly sampled. Defaule: False.
+        image: Input image.
+        multiplier (float or tuple of floats): If a single float is provided, the image will be multiplied by this number.
+            If a tuple of floats is provided, the multiplier will be in the range [multiplier[0], multiplier[1]). 
+            Default: (0.9, 1.1).
+        per_channel (bool): If False, the same values for all channels will be used.
+            If True, sample values for each channel will be used. Default: False.
+        elementwise (bool): If False, all pixels in an image will be multiplied with a random value sampled once.
+            If True, image pixels will be multiplied with values that are pixelwise randomly sampled. Default: False.
+        always_apply (bool): If True, apply the transform to all images. If False, apply the transform to some images.
+            Default: False.
+        p (float): Probability of applying the transform. Default: 1.0.
+
     Targets:
         image
+
     Image types:
         Any
     """
-    transform = A.Compose([A.augmentations.transforms.MultiplicativeNoise (multiplier, per_channel, elementwise, always_apply, p)])
+    transform = A.Compose([A.augmentations.transforms.MultiplicativeNoise(multiplier, per_channel, elementwise, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
 
-# #### Normalize
+# Normalize
 def Normalize (image,mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225), max_pixel_value=255.0, always_apply=False, p=1.0):
-    """Normalization is applied by the formula: `img = (img - mean * max_pixel_value) / (std * max_pixel_value)`
+    """
+    Normalize the input image by applying the formula: `img = (img - mean * max_pixel_value) / (std * max_pixel_value)`
     Args:
-        mean (float, list of float): mean values
-        std  (float, list of float): std values
+        image (numpy.ndarray): input image
+        mean (float or list of float): mean values
+        std (float or list of float): standard deviation values
         max_pixel_value (float): maximum possible pixel value
+        always_apply (bool): whether to apply the transform always or not
+        p (float): probability of applying the transform
+
     Targets:
         image
+
     Image types:
         uint8, float32
+
+    Returns:
+        numpy.ndarray: normalized image
     """
-        
-    transform = A.Compose([A.augmentations.transforms.Normalize (mean, std, max_pixel_value, always_apply, p)])
+    transform = A.Compose([A.augmentations.transforms.Normalize(mean, std, max_pixel_value, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
 
 
-# #### PixelDistributionAdaptation
-"""def PixelDistributionAdaptation (image,reference_images, blend_ratio=(0.25, 1.0), read_fn='', transform_type='pca', always_apply=False, p=1.0):
-    Another naive and quick pixel-level domain adaptation. It fits a simple transform (such as PCA, StandardScaler
-    or MinMaxScaler) on both original and reference image, transforms original image with transform trained on this
-    image and then performs inverse transformation using transform fitted on reference image.
+# PixelDistributionAdaptation
+"""
+def PixelDistributionAdaptation (image,reference_images, blend_ratio=(0.25, 1.0), read_fn='', transform_type='pca', always_apply=False, p=1.0):
+1.0), read_fn='', transform_type='pca', always_apply=False, p=1.0):
+    Apply pixel-level domain adaptation by fitting a simple transform (such as PCA, StandardScaler, or MinMaxScaler)
+    on both the original and reference image, transforms the original image with a transform trained on this
+    image, and then performs an inverse transformation using a transform fitted on the reference image.
+
     Args:
-        reference_images (List[str] or List(np.ndarray)): List of file paths for reference images
-            or list of reference images.
-        blend_ratio (float, float): Tuple of min and max blend ratio. Matched image will be blended with original
-            with random blend factor for increased diversity of generated images.
-        read_fn (Callable): Used-defined function to read image. Function should get image path and return numpy
-            array of image pixels. Usually it's default `read_rgb_image` when images paths are used as reference,
-            otherwise it could be identity function `lambda x: x` if reference images have been read in advance.
-        transform_type (str): type of transform; "pca", "standard", "minmax" are allowed.
+        image (ndarray): input image to transform.
+        reference_images (List[str] or List[ndarray]): list of file paths for reference images or list of reference images.
+        blend_ratio (tuple): tuple of min and max blend ratio. Matched image will be blended with original with random blend
+            factor for increased diversity of generated images. Default: (0.25, 1.0).
+        read_fn (Callable): user-defined function to read image. Function should get image path and return numpy array of
+            image pixels. Usually it's default `read_rgb_image` when images paths are used as reference, otherwise it could
+            be identity function `lambda x: x` if reference images have been read in advance. Default: ''.
+        transform_type (str): type of transform; "pca", "standard", "minmax" are allowed. Default: 'pca'.
+        always_apply (bool): apply the transform always. Default: False.
         p (float): probability of applying the transform. Default: 1.0.
+
     Targets:
         image
+
     Image types:
         uint8, float32
+
     See also: https://github.com/arsenyinfo/qudida
-    transform = A.Compose([A.augmentations.domain_adaptation.PixelDistributionAdaptation (reference_images, blend_ratio, read_fn, transform_type, always_apply, p)])
+
+    transform = A.Compose([A.augmentations.domain_adaptation.PixelDistributionAdaptation(reference_images, blend_ratio, read_fn, transform_type, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
-    return transformed_image"""
+    return transformed_image
+"""
 
-# #### Posterize
+# Posterize
 def Posterize (image,num_bits=4, always_apply=False, p=1.0):
     """Reduce the number of bits for each color channel.
+
     Args:
-        num_bits ((int, int) or int,
+    num_bits ((int, int) or int,
                 or list of ints [r, g, b],
                 or list of ints [[r1, r1], [g1, g2], [b1, b2]]): number of high bits.
             If num_bits is a single value, the range will be [num_bits, num_bits].
             Must be in range [0, 8]. Default: 4.
-        p (float): probability of applying the transform. Default: 1.0.
+            num_bits (int, tuple(int, int), list[int], list[list[int, int]]):
+            Number of high bits. If num_bits is a single value, the range will be [num_bits, num_bits].
+            Must be in range [0, 8]. Default: 4.
+    p (float): Probability of applying the transform. Default: 1.0.
+
     Targets:
     image
+
     Image types:
-        uint8
+    uint8
+
+    Returns:
+    The transformed image.
+
     """
     transform = A.Compose([A.augmentations.transforms.Posterize (num_bits, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
 
-# #### RGBShift
+# RGBShift
 def RGBShift (image,r_shift_limit=20, g_shift_limit=20, b_shift_limit=20, always_apply=False, p=1.0):
     """Randomly shift values for each channel of the input RGB image.
+
     Args:
-        r_shift_limit ((int, int) or int): range for changing values for the red channel. If r_shift_limit is a single
-            int, the range will be (-r_shift_limit, r_shift_limit). Default: (-20, 20).
-        g_shift_limit ((int, int) or int): range for changing values for the green channel. If g_shift_limit is a
-            single int, the range  will be (-g_shift_limit, g_shift_limit). Default: (-20, 20).
-        b_shift_limit ((int, int) or int): range for changing values for the blue channel. If b_shift_limit is a single
-            int, the range will be (-b_shift_limit, b_shift_limit). Default: (-20, 20).
-        p (float): probability of applying the transform. Default: 1.0.
+    r_shift_limit (int or tuple(int, int)):
+    Range for changing values for the red channel. If r_shift_limit is a single
+    int, the range will be (-r_shift_limit, r_shift_limit). Default: (-20, 20).
+    g_shift_limit (int or tuple(int, int)):
+    Range for changing values for the green channel. If g_shift_limit is a
+    single int, the range will be (-g_shift_limit, g_shift_limit). Default: (-20, 20).
+    b_shift_limit (int or tuple(int, int)):
+    Range for changing values for the blue channel. If b_shift_limit is a single
+    int, the range will be (-b_shift_limit, b_shift_limit). Default: (-20, 20).
+    p (float): Probability of applying the transform. Default: 1.0.
+
     Targets:
-        image
+    image
+
     Image types:
-        uint8, float32
+    uint8, float32
+
+    Returns:
+    The transformed image.
+
     """
     transform = A.Compose([A.augmentations.transforms.RGBShift (r_shift_limit, g_shift_limit, b_shift_limit, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
 
-# #### Sharpen
+# Sharpen
 def Sharpen (image,alpha=(0.2, 0.5), lightness=(0.5, 1.0), always_apply=False, p=1.0):
     """Sharpen the input image and overlays the result with the original image.
+
     Args:
-        alpha ((float, float)): range to choose the visibility of the sharpened image. At 0, only the original image is
-            visible, at 1.0 only its sharpened version is visible. Default: (0.2, 0.5).
-        lightness ((float, float)): range to choose the lightness of the sharpened image. Default: (0.5, 1.0).
-        p (float): probability of applying the transform. Default: 1.0.
+    alpha (tuple(float, float)):
+    Range to choose the visibility of the sharpened image. At 0, only the original image is
+    visible, at 1.0 only its sharpened version is visible. Default: (0.2, 0.5).
+    lightness (tuple(float, float)):
+    Range to choose the lightness of the sharpened image. Default: (0.5, 1.0).
+    p (float): Probability of applying the transform. Default: 1.0.
+
     Targets:
-        image
+    image
+
+    Returns:
+    The transformed image.
+
     """
     transform = A.Compose([A.augmentations.transforms.Sharpen (alpha, lightness, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
 
-# #### Solarize
+# Solarize
 def Solarize (image,threshold=128, always_apply=False, p=1.0):
-    """Invert all pixel values above a threshold.
-    Args:
-        threshold ((int, int) or int, or (float, float) or float): range for solarizing threshold.
-        If threshold is a single value, the range will be [threshold, threshold]. Default: 128.
-        p (float): probability of applying the transform. Default: 1.0.
-    Targets:
-        image
-    Image types:
-        any
     """
-    transform = A.Compose([A.augmentations.transforms.Solarize (threshold, always_apply, p)])
+    Apply the Solarize transformation to invert all pixel values above the threshold. Invert all pixel values above a threshold.
+    Args:
+        image (numpy.ndarray):
+            Input image.
+
+        threshold ((int, int) or int, or (float, float) or float, optional):
+            Range for solarizing threshold. If threshold is a single value, the range will be [threshold, threshold].
+            Default is 128.
+
+        p (float, optional):
+            Probability of applying the transform. Default is 1.0.
+
+    Returns:
+        numpy.ndarray:
+            Transformed image.
+    """
+
+    transform = A.Compose([
+        A.augmentations.transforms.Solarize(threshold, always_apply=True, p=p)
+    ])
+
     transformed = transform(image=image)
     transformed_image = transformed["image"]
+
     return transformed_image
 
-
-# #### Superpixels
+# Superpixels
 def Superpixels (image, p_replace=0.1, n_segments=100, max_size=128, interpolation=1, always_apply=False, p=1.0):
     """Transform images partially/completely to their superpixel representation.
     This implementation uses skimage's version of the SLIC algorithm.
     Args:
-        p_replace (float or tuple of float): Defines for any segment the probability that the pixels within that
-            segment are replaced by their average color (otherwise, the pixels are not changed).
+        image (numpy.ndarray):
+            Input image.
+
+        p_replace (float or tuple of float):
+            Defines for any segment the probability that the pixels within that segment are replaced by their
+            average color (otherwise, the pixels are not changed).
+
             Examples:
-                * A probability of ``0.0`` would mean, that the pixels in no
-                    segment are replaced by their average color (image is not
-                    changed at all).
-                * A probability of ``1.0`` would mean, that around half of all
-                    segments are replaced by their average color.
-                * A probability of ``1.0`` would mean, that all segments are
-                    replaced by their average color (resulting in a voronoi
-                    image).
+            - A probability of ``0.0`` would mean, that the pixels in no segment are replaced by their average color
+            (image is not changed at all).
+            - A probability of ``1.0`` would mean, that around half of all segments are replaced by their average color.
+            - A probability of ``1.0`` would mean, that all segments are replaced by their average color (resulting in a voronoi image).
+
             Behaviour based on chosen data types for this parameter:
-                * If a ``float``, then that ``flat`` will always be used.
-                * If ``tuple`` ``(a, b)``, then a random probability will be
-                    sampled from the interval ``[a, b]`` per image.
-        n_segments (int, or tuple of int): Rough target number of how many superpixels to generate (the algorithm
-            may deviate from this number). Lower value will lead to coarser superpixels.
-            Higher values are computationally more intensive and will hence lead to a slowdown
-            * If a single ``int``, then that value will always be used as the
-                number of segments.
-            * If a ``tuple`` ``(a, b)``, then a value from the discrete
-                interval ``[a..b]`` will be sampled per image.
-        max_size (int or None): Maximum image size at which the augmentation is performed.
-            If the width or height of an image exceeds this value, it will be
-            downscaled before the augmentation so that the longest side matches `max_size`.
+            - If a ``float``, then that ``flat`` will always be used.
+            - If ``tuple`` ``(a, b)``, then a random probability will be sampled from the interval ``[a, b]`` per image.
+
+        n_segments (int or tuple of int):
+            Rough target number of how many superpixels to generate (the algorithm may deviate from this number).
+            Lower value will lead to coarser superpixels. Higher values are computationally more intensive and will hence lead to a slowdown.
+
+            - If a single ``int``, then that value will always be used as the number of segments.
+            - If a ``tuple`` ``(a, b)``, then a value from the discrete interval ``[a..b]`` will be sampled per image.
+
+        max_size (int or None):
+            Maximum image size at which the augmentation is performed. If the width or height of an image exceeds this
+            value, it will be downscaled before the augmentation so that the longest side matches `max_size`.
             This is done to speed up the process. The final output image has the same size as the input image.
-            Note that in case `p_replace` is below ``1.0``,
-            the down-/upscaling will affect the not-replaced pixels too.
+            Note that in case `p_replace` is below ``1.0``, the down-/upscaling will affect the not-replaced pixels too.
             Use ``None`` to apply no down-/upscaling.
-        interpolation (OpenCV flag): flag that is used to specify the interpolation algorithm. Should be one of:
-            cv2.INTER_NEAREST, cv2.INTER_LINEAR, cv2.INTER_CUBIC, cv2.INTER_AREA, cv2.INTER_LANCZOS4.
-            Default: cv2.INTER_LINEAR.
-        p (float): probability of applying the transform. Default: 1.0.
+
+        interpolation (cv2 flag):
+            Flag that is used to specify the interpolation algorithm. Should be one of:
+            - cv2.INTER_NEAREST
+            - cv2.INTER_LINEAR
+            - cv2.INTER_CUBIC
+            - cv2.INTER_AREA
+            - cv2.INTER_LANCZOS4.
+
+            Default is cv2.INTER_LINEAR.
+
+        always_apply (bool):
+            Apply the transformation to all images, regardless of the probability defined by `p`.
+
+        p (float):
+            Probability of applying the transform. Default is 1.0.
+
     Targets:
         image
+
+    Returns:
+        numpy.ndarray:
+            Transformed image.
     """
-    transform = A.Compose([A.augmentations.transforms.Superpixels (p_replace, n_segments, max_size, interpolation, always_apply, p)])
+    transform = A.Compose([
+        A.augmentations.transforms.Superpixels(p_replace=p_replace,
+                                            n_segments=n_segments,
+                                            max_size=max_size,
+                                            interpolation=interpolation,
+                                            always_apply=always_apply,
+                                            p=p)
+    ])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
 
-# #### ToFloat
+# ToFloat
 def ToFloat (image,max_value=None, always_apply=False, p=1.0):
     """Divide pixel values by `max_value` to get a float32 output array where all values lie in the range [0, 1.0].
     If `max_value` is None the transform will try to infer the maximum value by inspecting the data type of the input
@@ -742,19 +964,23 @@ def ToFloat (image,max_value=None, always_apply=False, p=1.0):
     Image types:
         any type
     """
-    transform = A.Compose([A.augmentations.transforms.ToFloat (max_value, always_apply, p)])
+    transform = A.Compose([A.augmentations.transforms.ToFloat(max_value, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
 
-# #### ToGray
+# ToGray
 def ToGray(image,p=1.0):
-    """Convert the input RGB image to grayscale. If the mean pixel value for the resulting image is greater
-    than 127, invert the resulting grayscale image.
+    """Converts an RGB image to grayscale. If the mean pixel value of the grayscale image is greater than 127,
+    invert the resulting grayscale image.
+
     Args:
-        p (float): probability of applying the transform. Default: 1.0.
+        image (numpy.ndarray): Input image.
+        p (float): Probability of applying the transform. Default: 1.0.
+
     Targets:
         image
+
     Image types:
         uint8, float32
     """
@@ -763,62 +989,85 @@ def ToGray(image,p=1.0):
     transformed_image = transformed["image"]
     return transformed_image
 
-# #### ToSepia
+# ToSepia
 def ToSepia (image,always_apply=False, p=1.0):
-    """Applies sepia filter to the input RGB image
+    """
+    Applies a sepia filter to the input RGB image.
+
     Args:
-        p (float): probability of applying the transform. Default: 1.0.
+        image (numpy.ndarray): Input RGB image.
+        always_apply (bool): Indicates if the transform should always be applied. Default: False.
+        p (float): Probability of applying the transform. Default: 1.0.
+
     Targets:
         image
+
     Image types:
         uint8, float32
     """
-    transform = A.Compose([A.augmentations.transforms.ToSepia (always_apply=False, p=1.0)])
+
+    transform = A.Compose([A.augmentations.transforms.ToSepia(always_apply=always_apply, p=p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
 
-# #### VerticalFlip
+# VerticalFlip
 def VerticalFlip (image, p=1.0):
     """Flip the input vertically around the x-axis.
+
     Args:
+        image (ndarray): input image.
         p (float): probability of applying the transform. Default: 1.0.
+
     Targets:
         image, mask, bboxes, keypoints
+
     Image types:
         uint8, float32
+    Returns:
+        ndarray: transformed image
     """
     transform = A.Compose([A.augmentations.transforms.VerticalFlip(p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
 
-# #### HorizontalFlip
+# HorizontalFlip
 def HorizontalFlip (image, p=1.0):
     """Flip the input horizontally around the y-axis.
+
     Args:
-        p (float): probability of applying the transform. Default: 1.0.
+        image (numpy.ndarray): Input image to be flipped.
+        p (float): Probability of applying the transform. Default: 1.0.
+
     Targets:
         image, mask, bboxes, keypoints
+
     Image types:
         uint8, float32
     """
-    transform = A.Compose([A.augmentations.transforms.HorizontalFlip (p)])
+    transform = A.Compose([A.augmentations.transforms.HorizontalFlip(p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
 
 # #### Flip (Random_Flip)
 def Flip (image, p=1.0):
-    """Flip the input either horizontally, vertically or both horizontally and vertically.
+    """
+    Flip the input either horizontally, vertically or both horizontally and vertically.
+
     Args:
-        p (float): probability of applying the transform. Default: 1.0.
+        image (numpy.ndarray): Input image.
+        p (float): Probability of applying the transform. Default: 1.0.
+
     Targets:
         image, mask, bboxes, keypoints
+
     Image types:
         uint8, float32
     """
-    transform = A.Compose([A.augmentations.transforms.Flip (p)])
+
+    transform = A.Compose([A.augmentations.transforms.Flip(p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
@@ -883,23 +1132,26 @@ def bbox_flip(bbox, d, rows, cols):
 #https://github.com/albumentations-team/albumentations/blob/6de7dd01410a666c23c70cf69c548f171c94a1a7/albumentations/augmentations/functional.py#L1320
 
 
-# #### Transpose
+# Transpose
 def Transpose (image, p=1.0):
     """Transpose the input by swapping rows and columns.
+
     Args:
-        p (float): probability of applying the transform. Default: 1.0.
+        image: The input image.
+        p (float): Probability of applying the transform. Default: 1.0.
     Targets:
         image, mask, bboxes, keypoints
+
     Image types:
         uint8, float32
     """
-    transform = A.Compose([A.augmentations.transforms.Transpose (p=1.0)])
+    transform = A.Compose([A.augmentations.transforms.Transpose(p=p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
 
 
-# #### OpticalDistortion
+# OpticalDistortion
 def OpticalDistortion (image,distort_limit=0.05, shift_limit=0.05, interpolation=1, border_mode=4, value=None, mask_value=None, always_apply=False, p=1.0):
     """
     Args:
@@ -928,104 +1180,140 @@ def OpticalDistortion (image,distort_limit=0.05, shift_limit=0.05, interpolation
     return transformed_image
 
 
-# #### GridDistortion
-
-
+# GridDistortion
 def GridDistortion (image,num_steps=5, distort_limit=0.3, interpolation=1, border_mode=4, value=None, mask_value=None, always_apply=False, p=1) :
     """
+    Apply grid distortion to the input image.
+
     Args:
-        num_steps (int): count of grid cells on each side.
-        distort_limit (float, (float, float)): If distort_limit is a single float, the range
-            will be (-distort_limit, distort_limit). Default: (-0.03, 0.03).
-        interpolation (OpenCV flag): flag that is used to specify the interpolation algorithm. Should be one of:
+        image (numpy.ndarray): input image to be distorted.
+        num_steps (int): number of grid cells on each side. Default: 5.
+        distort_limit (float or tuple): maximum amount of distortion. If distort_limit is a single float, the range
+            will be (-distort_limit, distort_limit). Default: 0.3.
+        interpolation (int): flag that is used to specify the interpolation algorithm. Should be one of:
             cv2.INTER_NEAREST, cv2.INTER_LINEAR, cv2.INTER_CUBIC, cv2.INTER_AREA, cv2.INTER_LANCZOS4.
             Default: cv2.INTER_LINEAR.
-        border_mode (OpenCV flag): flag that is used to specify the pixel extrapolation method. Should be one of:
+        border_mode (int): flag that is used to specify the pixel extrapolation method. Should be one of:
             cv2.BORDER_CONSTANT, cv2.BORDER_REPLICATE, cv2.BORDER_REFLECT, cv2.BORDER_WRAP, cv2.BORDER_REFLECT_101.
-            Default: cv2.BORDER_REFLECT_101
-        value (int, float, list of ints, list of float): padding value if border_mode is cv2.BORDER_CONSTANT.
-        mask_value (int, float,
-                    list of ints,
-                    list of float): padding value if border_mode is cv2.BORDER_CONSTANT applied for masks.
+            Default: cv2.BORDER_REFLECT_101.
+        value (int, float or list): padding value if border_mode is cv2.BORDER_CONSTANT.
+        mask_value (int, float or list): padding value if border_mode is cv2.BORDER_CONSTANT applied for masks.
+        always_apply (bool): if True, always apply the transform. Default: False.
+        p (float): probability of applying the transform. Default: 1.0.
+
     Targets:
         image, mask
     Image types:
         uint8, float32
     """
-    transform = A.Compose([A.augmentations.transforms.GridDistortion (num_steps, distort_limit, interpolation, border_mode, value, mask_value, always_apply, p)])
+    transform = A.Compose([
+        A.augmentations.transforms.GridDistortion(
+            num_steps=num_steps,
+            distort_limit=distort_limit,
+            interpolation=interpolation,
+            border_mode=border_mode,
+            value=value,
+            mask_value=mask_value,
+            always_apply=always_apply,
+            p=p
+        )
+    ])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
 
 
-# #### PadIfNeeded
+# PadIfNeeded
 """
 def PadIfNeeded (image,min_height=1024, min_width=1024, pad_height_divisor=None, pad_width_divisor=None, position=PositionType.CENTER, border_mode=4, value=None, mask_value=None, always_apply=False, p=1.0):
     Pad side of the image / max if side is less than desired number.
+
     Args:
-        min_height (int): minimal result image height.
-        min_width (int): minimal result image width.
-        pad_height_divisor (int): if not None, ensures image height is dividable by value of this argument.
-        pad_width_divisor (int): if not None, ensures image width is dividable by value of this argument.
-        position (Union[str, PositionType]): Position of the image. should be PositionType.CENTER or
+        image (numpy.ndarray): Image to be transformed.
+        min_height (int): Minimal result image height.
+        min_width (int): Minimal result image width.
+        pad_height_divisor (int): If not None, ensures image height is dividable by value of this argument.
+        pad_width_divisor (int): If not None, ensures image width is dividable by value of this argument.
+        position (Union[str, PositionType]): Position of the image. Should be PositionType.CENTER or
             PositionType.TOP_LEFT or PositionType.TOP_RIGHT or PositionType.BOTTOM_LEFT or PositionType.BOTTOM_RIGHT.
             Default: PositionType.CENTER.
-        border_mode (OpenCV flag): OpenCV border mode.
-        value (int, float, list of int, list of float): padding value if border_mode is cv2.BORDER_CONSTANT.
-        mask_value (int, float,
-                    list of int,
-                    list of float): padding value for mask if border_mode is cv2.BORDER_CONSTANT.
-        p (float): probability of applying the transform. Default: 1.0.
+        border_mode (int): OpenCV border mode.
+        value (int, float, list of int, list of float): Padding value if border_mode is cv2.BORDER_CONSTANT.
+        mask_value (int, float, list of int, list of float): Padding value for mask if border_mode is cv2.BORDER_CONSTANT.
+        always_apply (bool): Apply the transform in any case. Default: False.
+        p (float): Probability of applying the transform. Default: 1.0.
+
     Targets:
         image, mask, bbox, keypoints
+
     Image types:
         uint8, float32
-    transform = A.Compose([A.augmentations.transforms.PadIfNeeded (min_height, min_width, pad_height_divisor, pad_width_divisor, position, border_mode, value, mask_value, always_apply, p)])
+    transform = A.Compose([
+        A.augmentations.transforms.PadIfNeeded(
+            min_height=min_height, min_width=min_width, pad_height_divisor=pad_height_divisor,
+            pad_width_divisor=pad_width_divisor, position=position, border_mode=border_mode,
+            value=value, mask_value=mask_value, always_apply=always_apply, p=p
+        )
+    ])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
     """
 
-# #### JpegCompression
+# JpegCompression
 def JpegCompression (image,quality_lower=99, quality_upper=100, always_apply=False, p=1.0):
-    """Decrease Jpeg compression of an image.
+    """
+    Decrease Jpeg compression of an image.
+
     Args:
-        quality_lower (float): lower bound on the jpeg quality. Should be in [0, 100] range
-        quality_upper (float): upper bound on the jpeg quality. Should be in [0, 100] range
+        quality_lower (float): lower bound on the jpeg quality. Should be in [0, 100] range.
+        quality_upper (float): upper bound on the jpeg quality. Should be in [0, 100] range.
+        always_apply (bool): apply the transform always. Default: False.
+        p (float): probability of applying the transform. Default: 1.0.
+
     Targets:
         image
+
     Image types:
         uint8, float32
     """
-    transform = A.Compose([A.augmentations.transforms.JpegCompression (quality_lower, quality_upper, always_apply, p)])
+    transform = A.Compose([A.augmentations.transforms.JpegCompression(quality_lower, quality_upper, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
 
-# #### Cutout
+# Cutout
 def Cutout (image,num_holes=8, max_h_size=8, max_w_size=8, fill_value=0, always_apply=False, p=1.0):
+    
     """
     CoarseDropout of the square regions in the image.
+
     Args:
-        num_holes (int): number of regions to zero out
-        max_h_size (int): maximum height of the hole
-        max_w_size (int): maximum width of the hole
-        fill_value (int, float, list of int, list of float): value for dropped pixels.
+        image (numpy.ndarray): Input image.
+        num_holes (int): Number of regions to zero out.
+        max_h_size (int): Maximum height of the hole.
+        max_w_size (int): Maximum width of the hole.
+        fill_value (int, float, list of int, list of float): Value for dropped pixels.
+        always_apply (bool): Whether to apply the transformation always.
+        p (float): Probability of applying the transform.
+
     Targets:
         image
+
     Image types:
         uint8, float32
+
     Reference:
-    |  https://arxiv.org/abs/1708.04552
-    |  https://github.com/uoguelph-mlrg/Cutout/blob/master/util/cutout.py
-    |  https://github.com/aleju/imgaug/blob/master/imgaug/augmenters/arithmetic.py
+        https://arxiv.org/abs/1708.04552
+        https://github.com/uoguelph-mlrg/Cutout/blob/master/util/cutout.py
+        https://github.com/aleju/imgaug/blob/master/imgaug/augmenters/arithmetic.py
     """
-    transform = A.Compose([A.augmentations.transforms.Cutout (num_holes, max_h_size, max_w_size, fill_value, always_apply, p)])
+    transform = A.Compose([A.augmentations.transforms.Cutout(num_holes, max_h_size, max_w_size, fill_value, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
 
-# #### CoarseDropout
+# CoarseDropout
 def CoarseDropout (image,max_holes=8, max_height=8, max_width=8, min_holes=None, min_height=None, min_width=None, fill_value=0, mask_fill_value=None, always_apply=False, p=1.0):
     """CoarseDropout of the rectangular regions in the image.
     Args:
@@ -1062,9 +1350,9 @@ def CoarseDropout (image,max_holes=8, max_height=8, max_width=8, min_holes=None,
 
 # #### Lambda
 """
-def Lambda (image=None, mask=None, keypoint=None, bbox=None, name=None, always_apply=False, p=1.0):
     A flexible transformation class for using user-defined transformation functions per targets.
-    Function signature must include **kwargs to accept optinal arguments like interpolation method, image size, etc:
+    Function signature must include **kwargs to accept optional arguments like interpolation method, image size, etc:
+
     Args:
         image (callable): Image transformation function.
         mask (callable): Mask transformation function.
@@ -1072,15 +1360,18 @@ def Lambda (image=None, mask=None, keypoint=None, bbox=None, name=None, always_a
         bbox (callable): BBox transformation function.
         always_apply (bool): Indicates whether this transformation should be always applied.
         p (float): probability of applying the transform. Default: 1.0.
+
     Targets:
         image, mask, bboxes, keypoints
+
     Image types:
         Any
 
-    transform = A.Compose([A.augmentations.transforms.Lambda (image, mask, keypoint, bbox, name, always_apply, p)])
+    transform = A.Compose([A.augmentations.transforms.Lambda(image=image, mask=mask, keypoint=keypoint, bbox=bbox, name=name, always_apply=always_apply, p=p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
-    return transformed_image"""
+    return transformed_image
+"""
 
 
 # #### MaskDropout
