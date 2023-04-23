@@ -89,11 +89,9 @@ from functools import wraps
 # * RingingOvershoot (Non-Functional)
 # * UnsharpMask (Non-Functional)
 
- 
+
 
 # #### Blur
-
-
 def Blur(image,blur_limit=7, always_apply=False, p=1.0):
 
     """Blur the input image using a random-sized kernel.
@@ -126,7 +124,6 @@ def CLAHE(image,clip_limit=4.0, tile_grid_size=(8, 8), always_apply=False, p=1.0
     Image types:
         uint8
     """
-        
     transform = A.Compose([A.augmentations.transforms.CLAHE(clip_limit, tile_grid_size, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
@@ -147,7 +144,6 @@ def ChannelDropout(image,channel_drop_range=(1, 1), fill_value=0, always_apply=F
     Image types:
         uint8, uint16, unit32, float32
     """
-        
     transform = A.Compose([A.augmentations.ChannelDropout(channel_drop_range, fill_value, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
@@ -194,7 +190,6 @@ def ColorJitter (image,brightness=0.2, contrast=0.2, saturation=0.2, hue=0.2, al
         hue_factor is chosen uniformly from [-hue, hue] or the given [min, max].
         Should have 0 <= hue <= 0.5 or -0.5 <= min <= max <= 0.5.
     """
-        
     transform = A.Compose([A.ColorJitter (brightness, contrast, saturation, hue, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
@@ -215,7 +210,6 @@ def Downscale (image,scale_min=0.25, scale_max=0.25, interpolation=0, always_app
     Image types:
         uint8, float32
     """
-        
     transform = A.Compose([A.augmentations.transforms.Downscale(scale_min, scale_max, interpolation, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
@@ -235,7 +229,6 @@ def Emboss (image,alpha=(0.2, 0.5), strength=(0.2, 0.7), always_apply=False, p=1
     Targets:
         image
     """
-        
     transform = A.Compose([A.augmentations.transforms.Emboss (alpha, strength, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
@@ -243,9 +236,8 @@ def Emboss (image,alpha=(0.2, 0.5), strength=(0.2, 0.7), always_apply=False, p=1
 
 
 # #### Equalize
-
-
-"""def Equalize (image,mode='cv', by_channels=True, mask=None, mask_params=None, always_apply=False, p=1.0):
+"""
+def Equalize (image,mode='cv', by_channels=True, mask=None, mask_params=None, always_apply=False, p=1.0):
     Equalize the image histogram.
     Args:
         mode (str): {'cv', 'pil'}. Use OpenCV or Pillow equalization method.
@@ -259,18 +251,17 @@ def Emboss (image,alpha=(0.2, 0.5), strength=(0.2, 0.7), always_apply=False, p=1
         image
     Image types:
         uint8
-    
-        
     transform = A.Compose([A.augmentations.transforms.Equalize (mode, by_channels, mask, mask_params, always_apply, p)])
     transformed = transform(image=image)
     #transformed_image = transformed["image"]
-    return transformed_image"""
+    return transformed_image
+"""
 
 
 # #### FDA (Fourier Domain Adaptation
 
-
-"""def FDA (image, reference_images, beta_limit=0.1, read_fn='', always_apply=False, p=1.0):
+"""
+def FDA (image, reference_images, beta_limit=0.1, read_fn='', always_apply=False, p=1.0):
     Apply Contrast Limited Adaptive Histogram Equalization to the input image.
     Args:
         clip_limit (float or (float, float)): upper threshold value for contrast limiting.
@@ -284,16 +275,14 @@ def Emboss (image,alpha=(0.2, 0.5), strength=(0.2, 0.7), always_apply=False, p=1
     Refer:
         https://github.com/YanchaoYang/FDA
 
-        
     transform = A.Compose([A.augmentations.FDAFDA (reference_images, beta_limit, read_fn, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
-    return transformed_image"""
+    return transformed_image
+"""
 
 
 # #### FancyPCA
-
-
 def FancyPCA (image,alpha=0.1, always_apply=False, p=1.0):
     """Augment RGB image using FancyPCA from Krizhevsky's paper
     "ImageNet Classification with Deep Convolutional Neural Networks"
@@ -309,7 +298,6 @@ def FancyPCA (image,alpha=0.1, always_apply=False, p=1.0):
         https://deshanadesai.github.io/notes/Fancy-PCA-with-Scikit-Image
         https://pixelatedbrian.github.io/2018-04-29-fancy_pca/
     """
-        
     transform = A.Compose([A.augmentations.transforms.FancyPCA (alpha, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
@@ -317,8 +305,6 @@ def FancyPCA (image,alpha=0.1, always_apply=False, p=1.0):
 
 
 # #### FromFloat
-
-
 def FromFloat (image,dtype='uint16', max_value=None, always_apply=False, p=1.0):
     """Take an input array where all values should lie in the range [0, 1.0], multiply them by `max_value` and then
     cast the resulted value to a type specified by `dtype`. If `max_value` is None the transform will try to infer
@@ -334,9 +320,8 @@ def FromFloat (image,dtype='uint16', max_value=None, always_apply=False, p=1.0):
     Image types:
         float32
     .. _'Data types' page from the NumPy docs:
-       https://docs.scipy.org/doc/numpy/user/basics.types.html
+        https://docs.scipy.org/doc/numpy/user/basics.types.html
     """
-        
     transform = A.Compose([A.augmentations.transforms.FromFloat (dtype, max_value, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
@@ -344,8 +329,6 @@ def FromFloat (image,dtype='uint16', max_value=None, always_apply=False, p=1.0):
 
 
 # #### GaussNoise
-
-
 def GaussNoise (image,var_limit=(10.0, 50.0), mean=0, per_channel=True, always_apply=False, p=1.0):
     """Apply gaussian noise to the input image.
     Args:
@@ -360,7 +343,6 @@ def GaussNoise (image,var_limit=(10.0, 50.0), mean=0, per_channel=True, always_a
     Image types:
         uint8, float32
     """
-        
     transform = A.Compose([A.augmentations.transforms.GaussNoise (var_limit, mean, per_channel, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
@@ -368,8 +350,6 @@ def GaussNoise (image,var_limit=(10.0, 50.0), mean=0, per_channel=True, always_a
 
 
 # #### GaussianBlur
-
-
 def GaussianBlur (image, blur_limit=(3, 7), sigma_limit=0, always_apply=False, p=1.0):
     """Blur the input image using a Gaussian filter with a random kernel size.
     Args:
@@ -387,7 +367,6 @@ def GaussianBlur (image, blur_limit=(3, 7), sigma_limit=0, always_apply=False, p
     Image types:
         uint8, float32
     """
-        
     transform = A.Compose([A.augmentations.transforms.GaussianBlur (blur_limit, sigma_limit, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
@@ -414,7 +393,6 @@ def GlassBlur (image,sigma=0.7, max_delta=4, iterations=2, always_apply=False, m
     |  https://arxiv.org/abs/1903.12261
     |  https://github.com/hendrycks/robustness/blob/master/ImageNet-C/create_c/make_imagenet_c.py
     """
-        
     transform = A.Compose([A.augmentations.transforms.GlassBlur(sigma, max_delta, iterations, always_apply, mode, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
@@ -422,10 +400,8 @@ def GlassBlur (image,sigma=0.7, max_delta=4, iterations=2, always_apply=False, m
 
 
 # #### HistogramMatching
-
-
-"""def HistogramMatching (image,reference_images, blend_ratio=(0.5, 1.0), read_fn="", always_apply=False, p=1.0):
-    
+"""
+def HistogramMatching (image,reference_images, blend_ratio=(0.5, 1.0), read_fn="", always_apply=False, p=1.0):
     Apply histogram matching. It manipulates the pixels of an input image so that its histogram matches
     the histogram of the reference image. If the images have multiple channels, the matching is done independently
     for each channel, as long as the number of channels is equal in the input image and the reference.
@@ -446,17 +422,14 @@ def GlassBlur (image,sigma=0.7, max_delta=4, iterations=2, always_apply=False, m
         image
     Image types:
         uint8, uint16, float32
-    
-        
     transform = A.Compose([A.augmentations.domain_adaptation.HistogramMatching (reference_images, blend_ratio, read_fn, always_apply, p) ])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
-    return transformed_image"""
+    return transformed_image
+"""
 
 
 # #### HueSaturationValue
-
-
 def HueSaturationValue (image,hue_shift_limit=20, sat_shift_limit=30, val_shift_limit=20, always_apply=False, p=1.0):
     """Randomly change hue, saturation and value of the input image.
     Args:
@@ -472,7 +445,6 @@ def HueSaturationValue (image,hue_shift_limit=20, sat_shift_limit=30, val_shift_
     Image types:
         uint8, float32
     """
-        
     transform = A.Compose([A.augmentations.transforms.HueSaturationValue (hue_shift_limit, sat_shift_limit, val_shift_limit, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
@@ -480,8 +452,6 @@ def HueSaturationValue (image,hue_shift_limit=20, sat_shift_limit=30, val_shift_
 
 
 # #### ISONoise
-
-
 def ISONoise (image,color_shift=(0.01, 0.05), intensity=(0.1, 0.5), always_apply=False, p=1.0):
     """
     Apply camera sensor noise.
@@ -496,40 +466,33 @@ def ISONoise (image,color_shift=(0.01, 0.05), intensity=(0.1, 0.5), always_apply
     Image types:
         uint8
     """
-        
     transform = A.Compose([A.augmentations.transforms.ISONoise (color_shift, intensity, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
 
-
 # #### ImageCompression
-
-
-"""def ImageCompression (image,quality_lower=99, quality_upper=100, compression_type=None, always_apply=False, p=1.0):
+"""
+def ImageCompression (image,quality_lower=99, quality_upper=100, compression_type=None, always_apply=False, p=1.0):
     Decrease Jpeg, WebP compression of an image.
     Args:
         quality_lower (float): lower bound on the image quality.
-                               Should be in [0, 100] range for jpeg and [1, 100] for webp.
+                                Should be in [0, 100] range for jpeg and [1, 100] for webp.
         quality_upper (float): upper bound on the image quality.
-                               Should be in [0, 100] range for jpeg and [1, 100] for webp.
+                                Should be in [0, 100] range for jpeg and [1, 100] for webp.
         compression_type (ImageCompressionType): should be ImageCompressionType.JPEG or ImageCompressionType.WEBP.
             Default: ImageCompressionType.JPEG
     Targets:
         image
     Image types:
         uint8, float32
-    
-        
     transform = A.Compose([A.augmentations.transforms.ImageCompression (quality_lower, quality_upper, compression_type, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
-    return transformed_image"""
-
+    return transformed_image
+"""
 
 # #### InvertImg
-
-
 def InvertImg(image,p=1.0):
     """Invert the input image by subtracting pixel values from 255.
     Args:
@@ -539,7 +502,6 @@ def InvertImg(image,p=1.0):
     Image types:
         uint8
     """
-        
     transform = A.Compose([A.augmentations.transforms.InvertImg(p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
@@ -547,8 +509,6 @@ def InvertImg(image,p=1.0):
 
 
 # #### MedianBlur
-
-
 def MedianBlur (image,blur_limit=7, always_apply=False, p=1.0):
     """Blur the input image using a median filter with a random aperture linear size.
     Args:
@@ -560,16 +520,12 @@ def MedianBlur (image,blur_limit=7, always_apply=False, p=1.0):
     Image types:
         uint8, float32
     """
-        
     transform = A.Compose([A.augmentations.transforms.MedianBlur (blur_limit, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
 
-
 # #### MotionBlur
-
-
 def MotionBlur(image,blur_limit=7,p=1.0):
     """Apply motion blur to the input image using a random-sized kernel.
     Args:
@@ -581,16 +537,12 @@ def MotionBlur(image,blur_limit=7,p=1.0):
     Image types:
         uint8, float32
     """
-        
     transform = A.Compose([A.augmentations.transforms.MotionBlur(blur_limit,p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
 
-
 # #### MultiplicativeNoise
-
-
 def MultiplicativeNoise (image,multiplier=(0.9, 1.1), per_channel=False, elementwise=False, always_apply=False, p=1.0):
     """Multiply image to random number or array of numbers.
     Args:
@@ -605,16 +557,12 @@ def MultiplicativeNoise (image,multiplier=(0.9, 1.1), per_channel=False, element
     Image types:
         Any
     """
-        
     transform = A.Compose([A.augmentations.transforms.MultiplicativeNoise (multiplier, per_channel, elementwise, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
 
-
 # #### Normalize
-
-
 def Normalize (image,mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225), max_pixel_value=255.0, always_apply=False, p=1.0):
     """Normalization is applied by the formula: `img = (img - mean * max_pixel_value) / (std * max_pixel_value)`
     Args:
@@ -634,10 +582,7 @@ def Normalize (image,mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225), max_
 
 
 # #### PixelDistributionAdaptation
-
-
 """def PixelDistributionAdaptation (image,reference_images, blend_ratio=(0.25, 1.0), read_fn='', transform_type='pca', always_apply=False, p=1.0):
-    
     Another naive and quick pixel-level domain adaptation. It fits a simple transform (such as PCA, StandardScaler
     or MinMaxScaler) on both original and reference image, transforms original image with transform trained on this
     image and then performs inverse transformation using transform fitted on reference image.
@@ -656,23 +601,18 @@ def Normalize (image,mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225), max_
     Image types:
         uint8, float32
     See also: https://github.com/arsenyinfo/qudida
-    
-        
     transform = A.Compose([A.augmentations.domain_adaptation.PixelDistributionAdaptation (reference_images, blend_ratio, read_fn, transform_type, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image"""
 
-
 # #### Posterize
-
-
 def Posterize (image,num_bits=4, always_apply=False, p=1.0):
     """Reduce the number of bits for each color channel.
     Args:
         num_bits ((int, int) or int,
-                  or list of ints [r, g, b],
-                  or list of ints [[r1, r1], [g1, g2], [b1, b2]]): number of high bits.
+                or list of ints [r, g, b],
+                or list of ints [[r1, r1], [g1, g2], [b1, b2]]): number of high bits.
             If num_bits is a single value, the range will be [num_bits, num_bits].
             Must be in range [0, 8]. Default: 4.
         p (float): probability of applying the transform. Default: 1.0.
@@ -681,16 +621,12 @@ def Posterize (image,num_bits=4, always_apply=False, p=1.0):
     Image types:
         uint8
     """
-        
     transform = A.Compose([A.augmentations.transforms.Posterize (num_bits, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
 
-
 # #### RGBShift
-
-
 def RGBShift (image,r_shift_limit=20, g_shift_limit=20, b_shift_limit=20, always_apply=False, p=1.0):
     """Randomly shift values for each channel of the input RGB image.
     Args:
@@ -706,16 +642,12 @@ def RGBShift (image,r_shift_limit=20, g_shift_limit=20, b_shift_limit=20, always
     Image types:
         uint8, float32
     """
-        
     transform = A.Compose([A.augmentations.transforms.RGBShift (r_shift_limit, g_shift_limit, b_shift_limit, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
 
-
 # #### Sharpen
-
-
 def Sharpen (image,alpha=(0.2, 0.5), lightness=(0.5, 1.0), always_apply=False, p=1.0):
     """Sharpen the input image and overlays the result with the original image.
     Args:
@@ -726,16 +658,12 @@ def Sharpen (image,alpha=(0.2, 0.5), lightness=(0.5, 1.0), always_apply=False, p
     Targets:
         image
     """
-        
     transform = A.Compose([A.augmentations.transforms.Sharpen (alpha, lightness, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
 
-
 # #### Solarize
-
-
 def Solarize (image,threshold=128, always_apply=False, p=1.0):
     """Invert all pixel values above a threshold.
     Args:
@@ -747,7 +675,6 @@ def Solarize (image,threshold=128, always_apply=False, p=1.0):
     Image types:
         any
     """
-        
     transform = A.Compose([A.augmentations.transforms.Solarize (threshold, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
@@ -755,8 +682,6 @@ def Solarize (image,threshold=128, always_apply=False, p=1.0):
 
 
 # #### Superpixels
-
-
 def Superpixels (image, p_replace=0.1, n_segments=100, max_size=128, interpolation=1, always_apply=False, p=1.0):
     """Transform images partially/completely to their superpixel representation.
     This implementation uses skimage's version of the SLIC algorithm.
@@ -765,24 +690,24 @@ def Superpixels (image, p_replace=0.1, n_segments=100, max_size=128, interpolati
             segment are replaced by their average color (otherwise, the pixels are not changed).
             Examples:
                 * A probability of ``0.0`` would mean, that the pixels in no
-                  segment are replaced by their average color (image is not
-                  changed at all).
+                    segment are replaced by their average color (image is not
+                    changed at all).
                 * A probability of ``1.0`` would mean, that around half of all
-                  segments are replaced by their average color.
+                    segments are replaced by their average color.
                 * A probability of ``1.0`` would mean, that all segments are
-                  replaced by their average color (resulting in a voronoi
-                  image).
+                    replaced by their average color (resulting in a voronoi
+                    image).
             Behaviour based on chosen data types for this parameter:
                 * If a ``float``, then that ``flat`` will always be used.
                 * If ``tuple`` ``(a, b)``, then a random probability will be
-                  sampled from the interval ``[a, b]`` per image.
+                    sampled from the interval ``[a, b]`` per image.
         n_segments (int, or tuple of int): Rough target number of how many superpixels to generate (the algorithm
             may deviate from this number). Lower value will lead to coarser superpixels.
             Higher values are computationally more intensive and will hence lead to a slowdown
             * If a single ``int``, then that value will always be used as the
-              number of segments.
+                number of segments.
             * If a ``tuple`` ``(a, b)``, then a value from the discrete
-              interval ``[a..b]`` will be sampled per image.
+                interval ``[a..b]`` will be sampled per image.
         max_size (int or None): Maximum image size at which the augmentation is performed.
             If the width or height of an image exceeds this value, it will be
             downscaled before the augmentation so that the longest side matches `max_size`.
@@ -797,16 +722,12 @@ def Superpixels (image, p_replace=0.1, n_segments=100, max_size=128, interpolati
     Targets:
         image
     """
-        
     transform = A.Compose([A.augmentations.transforms.Superpixels (p_replace, n_segments, max_size, interpolation, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
 
-
 # #### ToFloat
-
-
 def ToFloat (image,max_value=None, always_apply=False, p=1.0):
     """Divide pixel values by `max_value` to get a float32 output array where all values lie in the range [0, 1.0].
     If `max_value` is None the transform will try to infer the maximum value by inspecting the data type of the input
@@ -821,16 +742,12 @@ def ToFloat (image,max_value=None, always_apply=False, p=1.0):
     Image types:
         any type
     """
-        
     transform = A.Compose([A.augmentations.transforms.ToFloat (max_value, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
 
-
 # #### ToGray
-
-
 def ToGray(image,p=1.0):
     """Convert the input RGB image to grayscale. If the mean pixel value for the resulting image is greater
     than 127, invert the resulting grayscale image.
@@ -841,16 +758,12 @@ def ToGray(image,p=1.0):
     Image types:
         uint8, float32
     """
-        
     transform = A.Compose([A.augmentations.transforms.ToGray(p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
 
-
 # #### ToSepia
-
-
 def ToSepia (image,always_apply=False, p=1.0):
     """Applies sepia filter to the input RGB image
     Args:
@@ -860,16 +773,12 @@ def ToSepia (image,always_apply=False, p=1.0):
     Image types:
         uint8, float32
     """
-        
     transform = A.Compose([A.augmentations.transforms.ToSepia (always_apply=False, p=1.0)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
 
-
 # #### VerticalFlip
-
-
 def VerticalFlip (image, p=1.0):
     """Flip the input vertically around the x-axis.
     Args:
@@ -879,16 +788,12 @@ def VerticalFlip (image, p=1.0):
     Image types:
         uint8, float32
     """
-        
     transform = A.Compose([A.augmentations.transforms.VerticalFlip(p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
 
-
 # #### HorizontalFlip
-
-
 def HorizontalFlip (image, p=1.0):
     """Flip the input horizontally around the y-axis.
     Args:
@@ -898,16 +803,12 @@ def HorizontalFlip (image, p=1.0):
     Image types:
         uint8, float32
     """
-        
     transform = A.Compose([A.augmentations.transforms.HorizontalFlip (p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
 
-
 # #### Flip (Random_Flip)
-
-
 def Flip (image, p=1.0):
     """Flip the input either horizontally, vertically or both horizontally and vertically.
     Args:
@@ -917,26 +818,18 @@ def Flip (image, p=1.0):
     Image types:
         uint8, float32
     """
-        
     transform = A.Compose([A.augmentations.transforms.Flip (p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
 
-
-
 #d = random.randint(-1, 1)
 #https://github.com/albumentations-team/albumentations/blob/master/albumentations/augmentations/transforms.py#L337
-
-
-
 '''
 def random_flip(img, code):
     return cv2.flip(img, code)
 '''
 # https://github.com/albumentations-team/albumentations/blob/6de7dd01410a666c23c70cf69c548f171c94a1a7/albumentations/augmentations/functional.py#L119
-
-
 
 '''
 def bbox_vflip(bbox, rows, cols):  # skipcq: PYL-W0613
@@ -991,8 +884,6 @@ def bbox_flip(bbox, d, rows, cols):
 
 
 # #### Transpose
-
-
 def Transpose (image, p=1.0):
     """Transpose the input by swapping rows and columns.
     Args:
@@ -1002,7 +893,6 @@ def Transpose (image, p=1.0):
     Image types:
         uint8, float32
     """
-        
     transform = A.Compose([A.augmentations.transforms.Transpose (p=1.0)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
@@ -1010,8 +900,6 @@ def Transpose (image, p=1.0):
 
 
 # #### OpticalDistortion
-
-
 def OpticalDistortion (image,distort_limit=0.05, shift_limit=0.05, interpolation=1, border_mode=4, value=None, mask_value=None, always_apply=False, p=1.0):
     """
     Args:
@@ -1034,7 +922,6 @@ def OpticalDistortion (image,distort_limit=0.05, shift_limit=0.05, interpolation
     Image types:
         uint8, float32
     """
-        
     transform = A.Compose([A.augmentations.transforms.OpticalDistortion (distort_limit, shift_limit, interpolation, border_mode, value, mask_value, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
@@ -1065,7 +952,6 @@ def GridDistortion (image,num_steps=5, distort_limit=0.3, interpolation=1, borde
     Image types:
         uint8, float32
     """
-        
     transform = A.Compose([A.augmentations.transforms.GridDistortion (num_steps, distort_limit, interpolation, border_mode, value, mask_value, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
@@ -1073,10 +959,8 @@ def GridDistortion (image,num_steps=5, distort_limit=0.3, interpolation=1, borde
 
 
 # #### PadIfNeeded
-
-
-"""def PadIfNeeded (image,min_height=1024, min_width=1024, pad_height_divisor=None, pad_width_divisor=None, position=PositionType.CENTER, border_mode=4, value=None, mask_value=None, always_apply=False, p=1.0):
-    
+"""
+def PadIfNeeded (image,min_height=1024, min_width=1024, pad_height_divisor=None, pad_width_divisor=None, position=PositionType.CENTER, border_mode=4, value=None, mask_value=None, always_apply=False, p=1.0):
     Pad side of the image / max if side is less than desired number.
     Args:
         min_height (int): minimal result image height.
@@ -1096,17 +980,13 @@ def GridDistortion (image,num_steps=5, distort_limit=0.3, interpolation=1, borde
         image, mask, bbox, keypoints
     Image types:
         uint8, float32
-
-        
     transform = A.Compose([A.augmentations.transforms.PadIfNeeded (min_height, min_width, pad_height_divisor, pad_width_divisor, position, border_mode, value, mask_value, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
-    return transformed_image"""
-
+    return transformed_image
+    """
 
 # #### JpegCompression
-
-
 def JpegCompression (image,quality_lower=99, quality_upper=100, always_apply=False, p=1.0):
     """Decrease Jpeg compression of an image.
     Args:
@@ -1117,18 +997,15 @@ def JpegCompression (image,quality_lower=99, quality_upper=100, always_apply=Fal
     Image types:
         uint8, float32
     """
-        
     transform = A.Compose([A.augmentations.transforms.JpegCompression (quality_lower, quality_upper, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
 
-
 # #### Cutout
-
-
 def Cutout (image,num_holes=8, max_h_size=8, max_w_size=8, fill_value=0, always_apply=False, p=1.0):
-    """CoarseDropout of the square regions in the image.
+    """
+    CoarseDropout of the square regions in the image.
     Args:
         num_holes (int): number of regions to zero out
         max_h_size (int): maximum height of the hole
@@ -1143,16 +1020,12 @@ def Cutout (image,num_holes=8, max_h_size=8, max_w_size=8, fill_value=0, always_
     |  https://github.com/uoguelph-mlrg/Cutout/blob/master/util/cutout.py
     |  https://github.com/aleju/imgaug/blob/master/imgaug/augmenters/arithmetic.py
     """
-        
     transform = A.Compose([A.augmentations.transforms.Cutout (num_holes, max_h_size, max_w_size, fill_value, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image
 
-
 # #### CoarseDropout
-
-
 def CoarseDropout (image,max_holes=8, max_height=8, max_width=8, min_holes=None, min_height=None, min_width=None, fill_value=0, mask_fill_value=None, always_apply=False, p=1.0):
     """CoarseDropout of the rectangular regions in the image.
     Args:
@@ -1181,7 +1054,6 @@ def CoarseDropout (image,max_holes=8, max_height=8, max_width=8, min_holes=None,
     |  https://github.com/uoguelph-mlrg/Cutout/blob/master/util/cutout.py
     |  https://github.com/aleju/imgaug/blob/master/imgaug/augmenters/arithmetic.py
     """
-        
     transform = A.Compose([A.augmentations.transforms.CoarseDropout (max_holes, max_height, max_width, min_holes, min_height, min_width, fill_value, mask_fill_value, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
@@ -1189,7 +1061,6 @@ def CoarseDropout (image,max_holes=8, max_height=8, max_width=8, min_holes=None,
 
 
 # #### Lambda
-
 """
 def Lambda (image=None, mask=None, keypoint=None, bbox=None, name=None, always_apply=False, p=1.0):
     A flexible transformation class for using user-defined transformation functions per targets.
@@ -1206,7 +1077,6 @@ def Lambda (image=None, mask=None, keypoint=None, bbox=None, name=None, always_a
     Image types:
         Any
 
-        
     transform = A.Compose([A.augmentations.transforms.Lambda (image, mask, keypoint, bbox, name, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
@@ -1214,8 +1084,6 @@ def Lambda (image=None, mask=None, keypoint=None, bbox=None, name=None, always_a
 
 
 # #### MaskDropout
-
-
 def MaskDropout (image, max_objects=1, image_fill_value=0, mask_fill_value=0, always_apply=False, p=1.0):
     """
     Image & mask augmentation that zero out mask and image regions corresponding
@@ -1224,7 +1092,6 @@ def MaskDropout (image, max_objects=1, image_fill_value=0, mask_fill_value=0, al
     Image can be any number of channels.
     Inspired by https://www.kaggle.com/c/severstal-steel-defect-detection/discussion/114254
     """
-        
     transform = A.Compose([A.augmentations.transforms.MaskDropout (max_objects, image_fill_value, mask_fill_value, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
@@ -1232,8 +1099,6 @@ def MaskDropout (image, max_objects=1, image_fill_value=0, mask_fill_value=0, al
 
 
 # #### GridDropout
-
-
 def GridDropout (image,ratio=0.5, unit_size_min=None, unit_size_max=None, holes_number_x=None, holes_number_y=None, shift_x=0, shift_y=0, random_offset=False, fill_value=0, mask_fill_value=None, always_apply=False, p=1.0):
     """GridDropout, drops out rectangular regions of an image and the corresponding mask in a grid fashion.
     Args:
@@ -1263,7 +1128,6 @@ def GridDropout (image,ratio=0.5, unit_size_min=None, unit_size_max=None, holes_
     References:
         https://arxiv.org/abs/2001.04086
     """
-        
     transform = A.Compose([A.augmentations.transforms.GridDropout (ratio, unit_size_min, unit_size_max, holes_number_x, holes_number_y, shift_x, shift_y, random_offset, fill_value, mask_fill_value, always_apply, p) ])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
@@ -1271,10 +1135,8 @@ def GridDropout (image,ratio=0.5, unit_size_min=None, unit_size_max=None, holes_
 
 
 # #### TemplateTransform
-
-
-"""def TemplateTransform (image,templates=None, img_weight=0.5, template_weight=0.5, template_transform=None, name=None, always_apply=False, p=1.0):
-    
+"""
+def TemplateTransform (image,templates=None, img_weight=0.5, template_weight=0.5, template_transform=None, name=None, always_apply=False, p=1.0):
     Apply blending of input image with specified templates
     Args:
         templates (numpy array or list of numpy arrays): Images as template for transform.
@@ -1291,17 +1153,17 @@ def GridDropout (image,ratio=0.5, unit_size_min=None, unit_size_max=None, holes_
         image
     Image types:
         uint8, float32
-        
+
     transform = A.Compose([A.augmentations.transforms.TemplateTransform (templates, img_weight, template_weight, template_transform, name, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
-    return transformed_image"""
+    return transformed_image
+"""
 
 
 # #### RingingOvershoot
-
-
-"""def RingingOvershoot (image,blur_limit=(7, 15), cutoff=(0.7853981633974483, 1.5707963267948966), always_apply=False, p=1.0):
+"""
+def RingingOvershoot (image,blur_limit=(7, 15), cutoff=(0.7853981633974483, 1.5707963267948966), always_apply=False, p=1.0):
     Create ringing or overshoot artefacts by conlvolving image with 2D sinc filter.
     Args:
         blur_limit (int, (int, int)): maximum kernel size for sinc filter.
@@ -1315,19 +1177,16 @@ def GridDropout (image,ratio=0.5, unit_size_min=None, unit_size_max=None, holes_
         https://arxiv.org/abs/2107.10833
     Targets:
         image
-    
-        
     transform = A.Compose([A.augmentations.transforms.RingingOvershoot (blur_limit, cutoff, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
-    return transformed_image"""
+    return transformed_image
+"""
 
 
 # #### UnsharpMask
-
-
-"""def UnsharpMask (image,blur_limit=(3, 7), sigma_limit=0.0, alpha=(0.2, 1.0), threshold=10, always_apply=False, p=1.0):
-    
+"""
+def UnsharpMask (image,blur_limit=(3, 7), sigma_limit=0.0, alpha=(0.2, 1.0), threshold=10, always_apply=False, p=1.0):
     Sharpen the input image using Unsharp Masking processing and overlays the result with the original image.
     Args:
         blur_limit (int, (int, int)): maximum Gaussian kernel size for blurring the input image.
@@ -1349,39 +1208,25 @@ def GridDropout (image,ratio=0.5, unit_size_min=None, unit_size_max=None, holes_
         arxiv.org/pdf/2107.10833.pdf
     Targets:
         image
-    
-        
     transform = A.Compose([A.augmentations.transforms.UnsharpMask (blur_limit, sigma_limit, alpha, threshold, always_apply, p)])
     transformed = transform(image=image)
     transformed_image = transformed["image"]
     return transformed_image"""
 
-
 # ## Read & Display Images
-
 # #### Read image Custom funtion
-
-
 def readImage(image_path):
-    
     imageInBGR= cv2.imread(image_path)
     imageBGR2RGB=cv2.cvtColor(imageInBGR, cv2.COLOR_BGR2RGB)
-
     return imageBGR2RGB
 
-
 # #### Display Image
-
-
 def visualize(image):
     plt.imshow(image)
     plt.axis("OFF")
     plt.show()
 
-
 # ### Custom Data Generator
-
-
 class StaticTransformDataGenerator(Sequence):
     """Generates data for Keras
     Sequence based data generator. Suitable for building data generator for training and prediction.
@@ -1401,7 +1246,6 @@ class StaticTransformDataGenerator(Sequence):
         """
         self.image=image
         self.num_sample=1
-        
         #self.list_IDs = list_IDs
         #self.labels = labels
         #self.image_path = image_path
@@ -1412,15 +1256,12 @@ class StaticTransformDataGenerator(Sequence):
         #self.n_channels = n_channels
         #self.shuffle = shuffle
         #self.on_epoch_end()
-        
-    # First, we define the constructor to initialize the configuration of the generator. 
-    # we assume the path to the data is in a dataframe column. 
-    # Hence, we define the x_col and y_col parameters. 
+    # First, we define the constructor to initialize the configuration of the generator.
+    # we assume the path to the data is in a dataframe column.
+    # Hence, we define the x_col and y_col parameters.
     # This could also be a directory name from where you can load the data.
-
-    #Another utility method we have is __len__. 
+    #Another utility method we have is __len__.
     #It essentially returns the number of steps in an epoch, using the samples and the batch size.
-        
     def __getitem__(self, index):
         """Generate one batch of data
         :param index: index of the batch
@@ -1440,7 +1281,7 @@ class StaticTransformDataGenerator(Sequence):
             return X, y
         else:
             return X
-    
+
     def __len__(self):
             # Denotes the number of batches per epoch
         return int(np.floor(len(self.list_IDs) / self.batch_size))
@@ -1448,340 +1289,300 @@ class StaticTransformDataGenerator(Sequence):
         :return: number of batches per epoch
         """
 
-
     def Blur (self,blur_limit=7, always_apply=False, p=1.0):
         for i in range(self.num_sample):
             img=Blur(self.image,blur_limit, always_apply, p)
             transform_type='Blur'
-            return img  
+            return img
 
     def CLAHE (self,clip_limit=4.0, tile_grid_size=(8, 8), always_apply=False, p=1.0):
         for i in range(1):
             img=CLAHE(self.image,clip_limit, tile_grid_size, always_apply, p)
             transform_type='CLAHE'
-            return img  
-        
+            return img
 
     def ChannelDropout(self,channel_drop_range=(1, 1), fill_value=0, always_apply=False, p=1.0):
         for i in range(self.num_sample):
             img=ChannelDropout(self.image)
             transform_type='ChannelDropout'
-            return img  
-        
+            return img
+
 
     def ChannelShuffle (self,p=1.0):
         for i in range(self.num_sample):
             img=ChannelShuffle(self.image,p)
             transform_type='ChannelShuffle'
-            return img  
-        
+            return img
 
     def ColorJitter (self):
         for i in range(self.num_sample):
             img=ColorJitter(self.image)
             transform_type='ColorJitter'
-            return img  
-        
+            return img
 
     def Downscale (self):
         for i in range(self.num_sample):
             img=Downscale(self.image)
             transform_type='Downscale'
-            return img  
-         
+            return img
+
 
     def Emboss (self):
         for i in range(self.num_sample):
             img=Emboss(self.image)
             transform_type='Emboss'
-            return img  
-        
+            return img
 
     """def Equalize (self):
         for i in range(self.num_sample):
             img=Equalize(self.image)
             transform_type='Equalize'
             return img  """
-        
 
     """def FDA (self):
         for i in range(self.num_sample):
             img=FDA(self.image)
             transform_type='FDA'
             return img  """
-        
 
     def FancyPCA (self):
         for i in range(self.num_sample):
             img=FancyPCA(self.image)
             transform_type='FancyPCA'
-            return img  
-        
+            return img
 
     def FromFloat (self):
         for i in range(self.num_sample):
             img=FromFloat(self.image)
             transform_type='FromFloat'
-            return img  
-        
+            return img
 
     def GaussNoise (self):
         for i in range(self.num_sample):
             img=GaussNoise(self.image)
             transform_type='GaussNoise'
-            return img  
-        
+            return img
 
     def GaussianBlur (self):
         for i in range(self.num_sample):
             img=GaussianBlur(self.image)
             transform_type='GaussianBlur'
-            return img  
-        
+            return img
 
     def GlassBlur (self):
         for i in range(self.num_sample):
             img=GlassBlur(self.image)
             transform_type='GlassBlur'
-            return img  
-        
+            return img
 
     """def HistogramMatching (self):
         for i in range(self.num_sample):
             img=HistogramMatching(self.image)
             transform_type='HistogramMatching'
-            return img   """        
-        
+            return img   """
 
     def HueSaturationValue (self):
         for i in range(self.num_sample):
             img=HueSaturationValue(self.image)
             transform_type='HueSaturationValue'
-            return img  
-        
+            return img
 
     def ISONoise (self):
         for i in range(self.num_sample):
             img=ISONoise(self.image)
             transform_type='ISONoise'
-            return img  
-        
+            return img
 
     """def ImageCompression (self):
         for i in range(self.num_sample):
             img=ImageCompression(self.image)
             transform_type='ImageCompression'
-            return img """ 
-        
+            return img """
+
     def InvertImg (self):
         for i in range(self.num_sample):
             img=InvertImg(self.image)
             transform_type='InvertImg'
-            return img  
-    
-        
+            return img
+
     def MedianBlur (self):
         for i in range(self.num_sample):
             img=MedianBlur(self.image)
             transform_type='MedianBlur'
-            return img  
-    
-        
+            return img
+
     def MotionBlur (self):
         for i in range(self.num_sample):
             img=MotionBlur(self.image)
             transform_type='MotionBlur'
-            return img  
-    
-        
+            return img
+
     def MultiplicativeNoise (self):
         for i in range(self.num_sample):
             img=MultiplicativeNoise(self.image)
             transform_type='MultiplicativeNoise'
-            return img  
-    
-        
-        
+            return img
+
     def Normalize (self):
         for i in range(self.num_sample):
             img=Normalize(self.image)
             transform_type='Normalize'
-            return img  
-    
-        
+            return img
+
     """def PixelDistributionAdaptation (self):
         for i in range(self.num_sample):
             img=PixelDistributionAdaptation(self.image)
             transform_type='PixelDistributionAdaptation'
-            return img"""  
-    
-        
+            return img"""
+
     def Posterize (self):
         for i in range(self.num_sample):
             img=Posterize(self.image)
             transform_type='Posterize'
-            return img  
-    
-        
+            return img
+
     def RGBShift (self):
         for i in range(self.num_sample):
             img=RGBShift(self.image)
             transform_type='RGBShift'
-            return img  
-        
+            return img
+
     def Sharpen (self):
         for i in range(self.num_sample):
             img=Sharpen(self.image)
             transform_type='Sharpen'
-            return img  
-    
-        
+            return img
+
     def Solarize (self):
         for i in range(self.num_sample):
             img=Solarize(self.image)
             transform_type='Solarize'
-            return img  
-    
-        
+            return img
+
     def Superpixels (self):
         for i in range(self.num_sample):
             img=Superpixels(self.image)
             transform_type='Superpixels'
-            return img  
-    
-        
+            return img
+
     def ToFloat (self):
         for i in range(self.num_sample):
             img=ToFloat(self.image)
             transform_type='ToFloat'
-            return img  
-    
-        
+            return img
+
     def ToGray (self):
         for i in range(self.num_sample):
             img=ToGray(self.image)
             transform_type='ToGray'
-            return img  
-    
-        
+            return img
+
     def ToSepia (self):
         for i in range(self.num_sample):
             img=ToSepia(self.image)
             transform_type='ToSepia'
-            return img  
-    
-        
+            return img
+
     def VerticalFlip (self):
         for i in range(self.num_sample):
             img=VerticalFlip(self.image)
             transform_type='VerticalFlip'
-            return img  
-    
-        
+            return img
+
     def HorizontalFlip (self):
         for i in range(self.num_sample):
             img=HorizontalFlip(self.image)
             transform_type='HorizontalFlip'
-            return img  
-    
-        
+            return img
+
     def Flip (self):
         for i in range(self.num_sample):
             img=Flip(self.image)
             transform_type='Flip'
-            return img  
-    
-        
+            return img
+
     def Transpose (self):
         for i in range(self.num_sample):
             img=Transpose(self.image)
             transform_type='Transpose'
-            return img  
-    
-        
+            return img
+
     def OpticalDistortion (self):
         for i in range(self.num_sample):
             img=OpticalDistortion(self.image)
             transform_type='OpticalDistortion'
-            return img  
-    
-        
+            return img
+
     def GridDistortion (self):
         for i in range(self.num_sample):
             img=GridDistortion(self.image)
             transform_type='GridDistortion'
-            return img  
-    
-        
+            return img
+
     """def PadIfNeeded (self):
         for i in range(self.num_sample):
             img=PadIfNeeded(self.image)
             transform_type='PadIfNeeded'
-            return img"""  
-    
-        
+            return img
+    """
+
     def JpegCompression (self):
         for i in range(self.num_sample):
             img=JpegCompression(self.image)
             transform_type='JpegCompression'
-            return img  
-    
-        
+            return img
+
     def Cutout (self):
         for i in range(self.num_sample):
             img=Cutout(self.image)
             transform_type='Cutout'
-            return img  
-    
-        
+            return img
+
     def CoarseDropout (self):
         for i in range(self.num_sample):
             img=CoarseDropout(self.image)
             transform_type='CoarseDropout'
-            return img  
-    
-        
+            return img
+
     """def Lambda (self):
         for i in range(self.num_sample):
             img=Lambda(self.image)
             transform_type='Lambda'
-            return img"""  
-    
-        
+            return img
+    """
+
     def MaskDropout (self):
         for i in range(self.num_sample):
             img=MaskDropout(self.image)
             transform_type='MaskDropout'
-            return img  
-    
-        
+            return img
+
     def GridDropout (self):
         for i in range(self.num_sample):
             img=GridDropout(self.image)
             transform_type='GridDropout'
-            return img  
-    
-        
+            return img
+
     """def TemplateTransform (self):
         for i in range(self.num_sample):
             img=TemplateTransform(self.image)
             transform_type='TemplateTransform'
-            return img"""  
-    
-        
+            return img
+    """
+
     """def RingingOvershoot (self):
         for i in range(self.num_sample):
             img=RingingOvershoot(self.image)
             transform_type='RingingOvershoot'
-            return img"""  
-    
-        
+            return img
+    """
+
     """def UnsharpMask (self,image=self.image,=1):
         for i in range(self.num_sample):
             img=UnsharpMask(self.image)
             transform_type='UnsharpMask'
-            return img"""  
-    
+            return img
+    """
 
     def _load_grayscale_image(self, image_path):
         """Load grayscale image
@@ -1792,4 +1593,3 @@ class StaticTransformDataGenerator(Sequence):
         img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         img = img / 255
         return img
-    
