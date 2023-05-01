@@ -3,10 +3,12 @@
 <!--<h1 align ="center" style="font-size: 1400px"> AugStatic - A Light-Weight Image Augmentation Library </h1>-->
 <h1 align ="center" style="color: purple; font-size: 80px;"><b><u>AugStatic - A Light-Weight Image Augmentation Library</u></b></h1>
 
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/augstatic-a-light-weight-image-augmentation/augstatic-image-augmentation-on-cifar10&color=072c79)](https://paperswithcode.com/sota/augstatic-image-augmentation-on-cifar10?p=augstatic-a-light-weight-image-augmentation)
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/augstatic-a-light-weight-image-augmentation/image-augmentation-on-intel-image)](https://paperswithcode.com/sota/image-augmentation-on-intel-image?p=augstatic-a-light-weight-image-augmentation)
+
+<!--[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/augstatic-a-light-weight-image-augmentation/augstatic-image-augmentation-on-cifar10&color=072c79)](https://paperswithcode.com/sota/augstatic-image-augmentation-on-cifar10?p=augstatic-a-light-weight-image-augmentation)
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/augstatic-a-light-weight-image-augmentation/augstatic-image-augmentation-on-coco&color=ff3131)](https://paperswithcode.com/sota/augstatic-image-augmentation-on-coco?p=augstatic-a-light-weight-image-augmentation)
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/augstatic-a-light-weight-image-augmentation/augstatic-image-augmentation-on-imagenet&color=#FFED00)](https://paperswithcode.com/sota/augstatic-image-augmentation-on-imagenet?p=augstatic-a-light-weight-image-augmentation)
-
+-->
 ## Abstract
 <p> <a href = 'https://www.jetir.org/papers/JETIR2205199.pdf'> [ Paper Link ] </a> </p>
 The rapid exponential increase in the data led to an abrupt mix of various data types, leading to a deficiency of helpful information. Creating new data with the existing different types of data are presented in this paper. Augmentation is adding up or modifying the dataset with extra data. There are many types of augmentation done for various kinds of datasets. Augmentation has been widely used in multiple pre-processing steps of diverse machine learning pipelines. Many libraries or packages are made for augmentation called augmentation libraries. There are many salient features that each library supports. This paper seeks to enhance the library that makes the AugStatic library much more lightweight and efficient. AugStatic is a custom-built image augmentation library with lower computation costs and more extraordinary salient features compared to other image augmentation libraries. This framework can be used for NumPy array and tensors too.
